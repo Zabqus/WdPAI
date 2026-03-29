@@ -1,19 +1,48 @@
 <?php
 
+require_once 'src/controllers/SecurityController.php';
+require_once 'src/controllers/DashboardController.php';
+
 class Routing {
 
-public static Run($patch){
+public static $routes = [
+        "login" => [
+            "controller" => "SecurityController",
+            "action" => "login"
+        ],
+        "dashboard" => [
+            "controller" => "DashboardController",
+            "action" => "index"
+        ],
+        "" => [
+            "controller" => "SecurityController",
+            "action" => "login"
+        ],
 
-switch($patch){
-    case "dashboard":
-        include "public/views/dashboard.html";
-        break;
+        "index" => "DashboardController",
+            "action" => "index"
+    ];
 
-    case "login":
-        break;
-        default;
 
-}
+
+     public static function run(string $path) {
+        // TODO sprawdzać za pomoca array_key_exists
+        switch($path) {
+            case 'dashboard':
+            case '':
+            case 'login':
+                $controller = Routing::$routes[$path]["controller"];
+                $action = Routing::$routes[$path]["action"];
+
+                $controllerObj = new $controller;
+                $id = null;
+
+                $controllerObj->$action($id);
+                break; 
+            default:
+                include 'public/views/404.html';
+                break;
+        }
 
 }
 
