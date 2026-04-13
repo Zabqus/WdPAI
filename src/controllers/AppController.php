@@ -13,27 +13,27 @@ class AppController {
         return $_SERVER["REQUEST_METHOD"] === 'POST';
     }
  
-    protected function render(string $template = null, array $variables = [])
+    protected function render(string $template, array $variables = []): void
     {
-        $templatePath = 'public/views/'. $template.'.html';
-        $templatePath404 = 'public/views/404.html';
-        $output = "";
-                 
-        if(file_exists($templatePath)){
-            extract($variables);
-            // ["tab_name" => $title]
+        $templatePath = 'src/Views/' . $template . '.php';
+        $path404      = 'src/Views/404.php';
 
-            // $tab_name = $title
+        extract($variables);
 
-            ob_start();
+        ob_start();
+        if (file_exists($templatePath)) {
             include $templatePath;
-            $output = ob_get_clean();
         } else {
-            ob_start();
-            include $templatePath404;
-            $output = ob_get_clean();
+            http_response_code(404);
+            include $path404;
         }
-        echo $output;
+        echo ob_get_clean();
+    }
+
+    protected function redirect(string $path): void
+    {
+        header('Location: /' . ltrim($path, '/'));
+        exit;
     }
 
 }

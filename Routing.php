@@ -1,50 +1,27 @@
 <?php
 
+require_once 'src/controllers/AppController.php';
 require_once 'src/controllers/SecurityController.php';
 require_once 'src/controllers/DashboardController.php';
 
 class Routing {
 
-public static $routes = [
-        "login" => [
-            "controller" => "SecurityController",
-            "action" => "login"
-        ],
-        "dashboard" => [
-            "controller" => "DashboardController",
-            "action" => "index"
-        ],
-        "" => [
-            "controller" => "SecurityController",
-            "action" => "login"
-        ],
-
-        "index" => "DashboardController",
-            "action" => "index"
+    private static array $routes = [
+        ''         => ['controller' => 'SecurityController',  'action' => 'login'],
+        'login'    => ['controller' => 'SecurityController',  'action' => 'login'],
+        'register' => ['controller' => 'SecurityController',  'action' => 'register'],
+        'dashboard'=> ['controller' => 'DashboardController', 'action' => 'index'],
     ];
 
-
-
-     public static function run(string $path) {
-        // TODO sprawdzać za pomoca array_key_exists
-        switch($path) {
-            case 'dashboard':
-            case '':
-            case 'login':
-                $controller = Routing::$routes[$path]["controller"];
-                $action = Routing::$routes[$path]["action"];
-
-                $controllerObj = new $controller;
-                $id = null;
-
-                $controllerObj->$action($id);
-                break; 
-            default:
-                include 'public/views/404.html';
-                break;
+    public static function run(string $path): void
+    {
+        if (array_key_exists($path, self::$routes)) {
+            $route = self::$routes[$path];
+            $controller = new $route['controller'];
+            $controller->{$route['action']}();
+        } else {
+            http_response_code(404);
+            include 'src/Views/404.php';
         }
-
-}
-
-
+    }
 }
