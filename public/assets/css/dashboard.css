@@ -1,0 +1,342 @@
+/* =============================================
+   SHARE PLANNER — dashboard.css
+   Dashboard page styles
+   ============================================= */
+
+/* ---- Page header ---- */
+.page-header {
+    margin-bottom: 28px;
+}
+
+.page-header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+}
+
+.page-header-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ---- Stat cards row ---- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.stat-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.stat-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.stat-icon-primary  { background: #EEF2FF; color: var(--primary); }
+.stat-icon-success  { background: var(--success-bg); color: var(--success); }
+.stat-icon-warning  { background: var(--warning-bg); color: var(--warning); }
+.stat-icon-info     { background: var(--info-bg); color: var(--info); }
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+}
+
+.stat-delta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-delta-up   { color: var(--success); }
+.stat-delta-down { color: var(--danger); }
+
+/* ---- Main grid ---- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+}
+
+/* ---- Upcoming events list ---- */
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    transition: background var(--transition);
+}
+
+.event-item:last-child { border-bottom: none; }
+
+.event-date-box {
+    width: 48px;
+    height: 52px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.event-date-day {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+
+.event-date-mon {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+}
+
+.event-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.event-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-meta i { font-size: 0.7rem; }
+
+.event-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* ---- Task progress list ---- */
+.task-progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.task-progress-item {}
+
+.task-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.task-progress-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.task-progress-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* ---- Mini calendar strip ---- */
+.week-strip {
+    display: flex;
+    gap: 6px;
+    padding: 4px 0;
+}
+
+.week-day {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 6px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.week-day:hover { background: var(--bg); }
+
+.week-day.today {
+    background: var(--primary);
+}
+
+.week-day.today .week-day-name,
+.week-day.today .week-day-num {
+    color: white;
+}
+
+.week-day-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+}
+
+.week-day-num {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.week-day-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary-light);
+}
+
+.week-day.today .week-day-dot {
+    background: rgba(255,255,255,0.5);
+}
+
+/* ---- Notes quick list ---- */
+.note-chip-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.note-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+}
+
+.note-chip:hover {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-sm);
+}
+
+.note-chip-color {
+    width: 4px;
+    height: 36px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.note-chip-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.note-chip-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.note-chip-date {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .stat-value {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
