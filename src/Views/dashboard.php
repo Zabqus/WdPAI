@@ -2,283 +2,239 @@
 <html lang="pl">
 <head>
     <?php
-    $title    = 'Dashboard — SharePlanner';
+    $title    = 'Dashboard — SyncU';
     $extraCss = ['dashboard'];
     include __DIR__ . '/partials/head.php';
     ?>
 </head>
-<body>
+<body class="db-page">
 
-<div class="app-layout">
+<!-- ==================== TOP NAVBAR ==================== -->
+<header class="db-navbar">
+    <div class="db-navbar-inner">
 
-    <?php
-    $activePage = 'dashboard';
-    include __DIR__ . '/partials/nav.php';
-    ?>
+        <!-- Search (left) -->
+        <div class="db-search-wrap">
+            <svg class="db-search-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                <path d="M10 10L7.45 7.45M8.5 4.75C8.5 6.82 6.82 8.5 4.75 8.5C2.68 8.5 1 6.82 1 4.75C1 2.68 2.68 1 4.75 1C6.82 1 8.5 2.68 8.5 4.75Z"
+                      stroke="#576162" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <label for="db-search" class="sr-only">Search resources, notes</label>
+            <input type="text" id="db-search" class="db-search-input" placeholder="Search resources, notes...">
+        </div>
 
-    <div class="main-content">
+        <!-- Center: Nav links -->
+        <nav class="db-nav-links">
+            <a href="/dashboard" class="db-nav-link active">Dashboard</a>
+            <a href="/calendar"  class="db-nav-link">Calendar</a>
+            <a href="/groups"    class="db-nav-link">Study Groups</a>
+        </nav>
 
-        <!-- Top bar -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="hamburger" id="hamburger" aria-label="Menu">
-                    <span></span><span></span><span></span>
-                </button>
-                <div>
-                    <div class="topbar-title">Dashboard</div>
-                    <div class="topbar-breadcrumb">
-                        <?= date('l, d F Y') ?>
-                    </div>
-                </div>
-            </div>
-            <div class="topbar-right">
-                <button class="btn-icon" title="Powiadomienia">
+        <!-- Right: icons + identity -->
+        <div class="db-navbar-right">
+            <div class="db-nav-icons">
+                <button class="db-icon-btn" title="Powiadomienia">
                     <i class="fa-regular fa-bell"></i>
-                    <span class="notification-dot"></span>
                 </button>
-                <button class="btn-icon" title="Ustawienia">
+                <button class="db-icon-btn" title="Ustawienia">
                     <i class="fa-regular fa-gear"></i>
                 </button>
-                <a href="/notes/new" class="btn btn-primary btn-sm">
-                    <i class="fa-solid fa-plus"></i>
-                    Nowa notatka
+            </div>
+            <div class="db-identity">
+                <div class="db-user-avatar">
+                    <?= strtoupper(substr($userName ?? 'AL', 0, 2)) ?>
+                </div>
+                <span class="db-brand">SyncU</span>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- ==================== MAIN CANVAS ==================== -->
+<main class="db-canvas">
+
+    <!-- Page Header -->
+    <div class="db-page-header">
+        <?php
+            $hour  = (int)date('H');
+            $greet = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening');
+        ?>
+        <h1 class="db-greeting"><?= $greet ?>, <?= htmlspecialchars($userName ?? 'Alex') ?>.</h1>
+        <p class="db-subtitle">
+            You have <strong><?= (int)($stats['upcoming'] ?? 4) ?> sessions</strong> scheduled for today.
+        </p>
+    </div>
+
+    <!-- Bento Grid -->
+    <div class="db-bento">
+
+        <!-- ===== TODAY'S FOCUS ===== -->
+        <section class="db-card db-focus">
+            <div class="db-card-top">
+                <h2 class="db-section-title">Today's Focus</h2>
+                <span class="db-date-badge"><?= strtoupper(date('F d, Y')) ?></span>
+            </div>
+            <div class="db-task-list">
+
+                <div class="db-task-item">
+                    <div class="db-task-left">
+                        <div class="db-task-bar" style="background:#1b6871;"></div>
+                        <div class="db-task-info">
+                            <div class="db-task-name">Advanced Quantum Mechanics</div>
+                            <div class="db-task-meta">Lecture Hall B &bull; 10:00 AM &ndash; 11:30 AM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="db-task-item">
+                    <div class="db-task-left">
+                        <div class="db-task-bar" style="background:#416280;"></div>
+                        <div class="db-task-info">
+                            <div class="db-task-name">Group Study: Ethics in AI</div>
+                            <div class="db-task-meta">Library Room 402 &bull; 1:00 PM &ndash; 2:30 PM</div>
+                        </div>
+                    </div>
+                    <div class="db-member-stack">
+                        <div class="db-member-avatar" style="background:#7c9eb5;">AB</div>
+                        <div class="db-member-avatar" style="background:#5a8293;">CD</div>
+                        <div class="db-member-avatar db-member-more">+3</div>
+                    </div>
+                </div>
+
+                <div class="db-task-item">
+                    <div class="db-task-left">
+                        <div class="db-task-bar" style="background:#3f575b;"></div>
+                        <div class="db-task-info">
+                            <div class="db-task-name">Submit Research Proposal</div>
+                            <div class="db-task-meta">Canvas Upload &bull; Due by 5:00 PM</div>
+                        </div>
+                    </div>
+                    <button class="db-task-menu" aria-label="Options">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===== DEADLINES ===== -->
+        <section class="db-card db-deadlines">
+            <h2 class="db-section-title">Deadlines</h2>
+
+            <div class="db-timeline">
+                <div class="db-timeline-item">
+                    <div class="db-timeline-dot" style="background:#a83836;"></div>
+                    <span class="db-timeline-when">In 2 Days</span>
+                    <div class="db-timeline-title">Midterm: Calculus III</div>
+                    <div class="db-timeline-desc">Preparation level: 65%</div>
+                </div>
+                <div class="db-timeline-item">
+                    <div class="db-timeline-dot" style="background:#1b6871;"></div>
+                    <span class="db-timeline-when">Oct 29</span>
+                    <div class="db-timeline-title">Colloquium: Neural Nets</div>
+                    <div class="db-timeline-desc">Presenting: Research Phase B</div>
+                </div>
+                <div class="db-timeline-item">
+                    <div class="db-timeline-dot" style="background:#a9b4b5;"></div>
+                    <span class="db-timeline-when">Nov 04</span>
+                    <div class="db-timeline-title">Final Thesis Draft</div>
+                    <div class="db-timeline-desc">Submit to Advisor</div>
+                </div>
+            </div>
+
+            <a href="/calendar" class="db-btn-teal">
+                VIEW FULL CALENDAR
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2.5 6H9.5M6.5 2.5L10 6L6.5 9.5"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </section>
+
+        <!-- ===== STUDY PROGRESS ===== -->
+        <section class="db-card db-progress">
+            <h2 class="db-section-title">Study Progress</h2>
+            <div class="db-circles">
+                <?php
+                $progressItems = !empty($studyProgress) ? $studyProgress : [
+                    ['label' => 'Physics', 'pct' => 75, 'color' => '#1b6871'],
+                    ['label' => 'Ethics',  'pct' => 40, 'color' => '#416280'],
+                    ['label' => 'Math',    'pct' => 90, 'color' => '#3f575b'],
+                ];
+                $r = 44;
+                $circ = 2 * M_PI * $r;
+                foreach ($progressItems as $item):
+                    $pct    = (int)($item['pct'] ?? 0);
+                    $color  = $item['color'] ?? '#1b6871';
+                    $label  = htmlspecialchars($item['label'] ?? '');
+                    $offset = $circ * (1 - $pct / 100);
+                ?>
+                <div class="db-circle-item">
+                    <div class="db-circle-wrap">
+                        <svg class="db-circle-svg" viewBox="0 0 112 112" width="112" height="112" aria-hidden="true">
+                            <circle class="db-circle-track" cx="56" cy="56" r="<?= $r ?>"/>
+                            <circle class="db-circle-fill" cx="56" cy="56" r="<?= $r ?>"
+                                    style="stroke:<?= htmlspecialchars($color) ?>;stroke-dasharray:<?= round($circ, 2) ?>;stroke-dashoffset:<?= round($offset, 2) ?>"/>
+                        </svg>
+                        <div class="db-circle-pct"><?= $pct ?>%</div>
+                    </div>
+                    <div class="db-circle-label"><?= $label ?></div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- ===== SHARED RESOURCES ===== -->
+        <section class="db-card db-resources">
+            <div class="db-card-top">
+                <h2 class="db-section-title">Shared Resources</h2>
+                <a href="/notes" class="db-link-teal">
+                    ALL NOTES
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                        <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3M8.5 1.5V7"
+                              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
             </div>
-        </header>
+            <div class="db-notes-grid">
 
-        <!-- Page body -->
-        <main class="page-body">
-
-            <div class="page-header">
-                <h1 class="page-header-title">
-                    Cześć, <?= htmlspecialchars($userName ?? 'Studencie') ?> 👋
-                </h1>
-                <p class="page-header-subtitle">
-                    Oto podsumowanie Twojego tygodnia.
-                </p>
-            </div>
-
-            <!-- Stat cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card-top">
-                        <span class="stat-label">Przedmioty</span>
-                        <div class="stat-icon stat-icon-primary">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
+                <div class="db-note-card">
+                    <div class="db-note-type">
+                        <i class="fa-regular fa-file-lines" style="color:#1b6871;font-size:15px;"></i>
+                        <span class="db-note-type-label">PDF &bull; 4.2 MB</span>
                     </div>
-                    <div class="stat-value"><?= $stats['courses'] ?? 0 ?></div>
-                    <div class="stat-delta">aktywnych w semestrze</div>
+                    <div class="db-note-title">Quantum Tunneling Refined Notes</div>
+                    <div class="db-note-author">
+                        <div class="db-author-avatar" style="background:#7c9eb5;">SM</div>
+                        <span>Shared by Sarah Miller</span>
+                    </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-top">
-                        <span class="stat-label">Nadchodzące</span>
-                        <div class="stat-icon stat-icon-warning">
-                            <i class="fa-solid fa-calendar-exclamation"></i>
-                        </div>
+                <div class="db-note-card">
+                    <div class="db-note-type">
+                        <i class="fa-regular fa-circle-dot" style="color:#1b6871;font-size:14px;"></i>
+                        <span class="db-note-type-label">COLLAB &bull; LIVE</span>
                     </div>
-                    <div class="stat-value"><?= $stats['upcoming'] ?? 0 ?></div>
-                    <div class="stat-delta">wydarzeń w ciągu 14 dni</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-card-top">
-                        <span class="stat-label">Zadania</span>
-                        <div class="stat-icon stat-icon-success">
-                            <i class="fa-solid fa-list-check"></i>
-                        </div>
+                    <div class="db-note-title">Ethics Brainstorming Board</div>
+                    <div class="db-note-author">
+                        <div class="db-author-avatar" style="background:#416280;">TK</div>
+                        <span>Active now: 4 people</span>
                     </div>
-                    <div class="stat-value"><?= $stats['tasksCompleted'] ?? 0 ?>/<?= $stats['tasksTotal'] ?? 0 ?></div>
-                    <div class="stat-delta">ukończonych dziś</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-card-top">
-                        <span class="stat-label">Notatki</span>
-                        <div class="stat-icon stat-icon-info">
-                            <i class="fa-solid fa-note-sticky"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value"><?= $stats['notes'] ?? 0 ?></div>
-                    <div class="stat-delta">udostępnionych: <?= $stats['sharedNotes'] ?? 0 ?></div>
-                </div>
-            </div>
-
-            <!-- Main grid -->
-            <div class="dashboard-grid">
-
-                <!-- Left column -->
-                <div style="display:flex;flex-direction:column;gap:20px;">
-
-                    <!-- Upcoming events -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">
-                                <i class="fa-regular fa-calendar-days" style="color:var(--primary);margin-right:8px;"></i>
-                                Nadchodzące wydarzenia
-                            </span>
-                            <a href="/calendar" class="btn btn-ghost btn-sm">
-                                Wszystkie <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                        <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
-                            <?php if (empty($upcomingEvents)): ?>
-                                <div class="empty-state">
-                                    <i class="fa-regular fa-calendar-check"></i>
-                                    <h3>Brak nadchodzących wydarzeń</h3>
-                                    <p>Dodaj egzaminy i kolokwia, aby śledzić je tutaj.</p>
-                                    <a href="/events/new" class="btn btn-primary btn-sm">Dodaj wydarzenie</a>
-                                </div>
-                            <?php else: ?>
-                                <div class="event-list">
-                                    <?php foreach ($upcomingEvents as $event): ?>
-                                        <div class="event-item">
-                                            <div class="event-date-box">
-                                                <span class="event-date-day"><?= date('d', strtotime($event['date'])) ?></span>
-                                                <span class="event-date-mon"><?= date('M', strtotime($event['date'])) ?></span>
-                                            </div>
-                                            <div class="event-info">
-                                                <div class="event-name"><?= htmlspecialchars($event['name']) ?></div>
-                                                <div class="event-meta">
-                                                    <span><i class="fa-regular fa-book-open"></i> <?= htmlspecialchars($event['course']) ?></span>
-                                                    <span class="badge badge-<?= $event['type'] === 'exam' ? 'danger' : 'warning' ?>">
-                                                        <?= $event['type'] === 'exam' ? 'Egzamin' : 'Kolokwium' ?>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="event-actions">
-                                                <a href="/events/<?= $event['id'] ?>" class="btn btn-secondary btn-sm">Szczegóły</a>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <!-- Study progress -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">
-                                <i class="fa-regular fa-chart-bar" style="color:var(--success);margin-right:8px;"></i>
-                                Postęp przygotowań
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <?php if (empty($studyProgress)): ?>
-                                <div class="empty-state" style="padding:24px;">
-                                    <p>Dodaj plan nauki, aby śledzić postęp.</p>
-                                </div>
-                            <?php else: ?>
-                                <div class="task-progress-list">
-                                    <?php foreach ($studyProgress as $item): ?>
-                                        <div class="task-progress-item">
-                                            <div class="task-progress-header">
-                                                <span class="task-progress-name"><?= htmlspecialchars($item['name']) ?></span>
-                                                <span class="task-progress-pct"><?= $item['pct'] ?>%</span>
-                                            </div>
-                                            <div class="progress">
-                                                <div class="progress-bar" style="width:<?= $item['pct'] ?>%"></div>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Right column -->
-                <div style="display:flex;flex-direction:column;gap:20px;">
-
-                    <!-- Week strip -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Ten tydzień</span>
-                            <a href="/calendar" class="btn btn-ghost btn-sm">Kalendarz</a>
-                        </div>
-                        <div class="card-body">
-                            <div class="week-strip" id="week-strip">
-                                <!-- Filled by JS -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent notes -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">
-                                <i class="fa-regular fa-note-sticky" style="color:var(--warning);margin-right:8px;"></i>
-                                Ostatnie notatki
-                            </span>
-                            <a href="/notes" class="btn btn-ghost btn-sm">
-                                Wszystkie <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <?php if (empty($recentNotes)): ?>
-                                <div class="empty-state" style="padding:20px;">
-                                    <p>Nie masz jeszcze żadnych notatek.</p>
-                                    <a href="/notes/new" class="btn btn-secondary btn-sm mt-3">Utwórz notatkę</a>
-                                </div>
-                            <?php else: ?>
-                                <div class="note-chip-list">
-                                    <?php
-                                    $colors = ['#4F46E5', '#7C3AED', '#10B981', '#F59E0B', '#EF4444'];
-                                    $i = 0;
-                                    foreach ($recentNotes as $note):
-                                    ?>
-                                        <a href="/notes/<?= $note['id'] ?>" class="note-chip">
-                                            <div class="note-chip-color" style="background:<?= $colors[$i % count($colors)] ?>;"></div>
-                                            <div class="note-chip-content">
-                                                <div class="note-chip-title"><?= htmlspecialchars($note['title']) ?></div>
-                                                <div class="note-chip-date"><?= date('d.m.Y', strtotime($note['updated_at'])) ?></div>
-                                            </div>
-                                            <?php if (!empty($note['shared'])): ?>
-                                                <i class="fa-solid fa-share-nodes" style="color:var(--text-light);font-size:0.75rem;"></i>
-                                            <?php endif; ?>
-                                        </a>
-                                    <?php $i++; endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
+        </section>
 
-        </main>
-    </div>
-</div>
+    </div><!-- /db-bento -->
+
+</main>
+
+<!-- Floating Action Button -->
+<button class="db-fab" title="New session">
+    <i class="fa-solid fa-plus"></i>
+</button>
 
 <script src="/public/assets/js/main.js" defer></script>
-<script>
-    // Week strip
-    (function () {
-        const strip = document.getElementById('week-strip');
-        if (!strip) return;
-        const days = ['Nd','Pn','Wt','Śr','Cz','Pt','Sb'];
-        const today = new Date();
-        const dayOfWeek = today.getDay();
-        const monday = new Date(today);
-        monday.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
-
-        for (let i = 0; i < 7; i++) {
-            const d = new Date(monday);
-            d.setDate(monday.getDate() + i);
-            const isToday = d.toDateString() === today.toDateString();
-            strip.innerHTML += `
-                <div class="week-day ${isToday ? 'today' : ''}">
-                    <span class="week-day-name">${days[d.getDay()]}</span>
-                    <span class="week-day-num">${d.getDate()}</span>
-                    <span class="week-day-dot"></span>
-                </div>`;
-        }
-    })();
-</script>
-
 </body>
 </html>
