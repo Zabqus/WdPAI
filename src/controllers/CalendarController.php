@@ -1,0 +1,13 @@
+<?php
+
+require_once 'AppController.php';
+
+class CalendarController extends AppController {
+
+    public function index(): void
+    {
+        $this->render('calendar', [
+            'userName' => $_SESSION['user_name'] ?? 'Alex',
+        ]);
+    }
+}

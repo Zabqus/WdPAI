@@ -3,6 +3,8 @@
 require_once 'src/controllers/AppController.php';
 require_once 'src/controllers/SecurityController.php';
 require_once 'src/controllers/DashboardController.php';
+require_once 'src/controllers/CalendarController.php';
+require_once 'src/controllers/GroupsController.php';
 
 class Routing {
 
@@ -11,6 +13,8 @@ class Routing {
         'login'    => ['controller' => 'SecurityController',  'action' => 'login'],
         'register' => ['controller' => 'SecurityController',  'action' => 'register'],
         'dashboard'=> ['controller' => 'DashboardController', 'action' => 'index'],
+        'calendar' => ['controller' => 'CalendarController',  'action' => 'index'],
+        'groups'   => ['controller' => 'GroupsController',   'action' => 'index'],
     ];
 
     public static function run(string $path): void
