@@ -1,6 +1,7 @@
 <?php
 
 require_once 'src/controllers/AppController.php';
+require_once 'src/controllers/ErrorHandler.php';
 require_once 'src/controllers/SecurityController.php';
 require_once 'src/controllers/DashboardController.php';
 require_once 'src/controllers/CalendarController.php';
@@ -24,8 +25,7 @@ class Routing {
             $controller = new $route['controller'];
             $controller->{$route['action']}();
         } else {
-            http_response_code(404);
-            include 'src/Views/404.php';
+            ErrorHandler::render(404);
         }
     }
 }

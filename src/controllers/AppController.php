@@ -24,8 +24,9 @@ class AppController {
         if (file_exists($templatePath)) {
             include $templatePath;
         } else {
-            http_response_code(404);
-            include $path404;
+            ob_end_clean();
+            ErrorHandler::render(404);
+            return;
         }
         echo ob_get_clean();
     }
