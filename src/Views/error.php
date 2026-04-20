@@ -1,3 +1,8 @@
+<?php
+/** @var int    $errorCode */
+/** @var string $errorTitle */
+/** @var string $errorDesc */
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>

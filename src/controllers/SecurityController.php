@@ -2,16 +2,39 @@
 
 require_once 'AppController.php';
 
-
 class SecurityController extends AppController {
+
+    public function loginForm(): void
+    {
+        $this->render('auth/login');
+    }
 
     public function login(): void
     {
-        $this->render('auth/login', ['title' => 'Logowanie — SharePlanner']);
+        $email    = trim($_POST['email']    ?? '');
+        $password = trim($_POST['password'] ?? '');
+
+        if ($email === '' || $password === '') {
+            $this->render('auth/login', ['error' => 'Wypełnij wszystkie pola.']);
+            return;
+        }
+
+        // TODO: verify credentials against DB
+        // Placeholder — accept any non-empty input for now
+        Session::set('user_email', $email);
+        Session::set('user_name',  explode('@', $email)[0]);
+
+        $this->redirect('dashboard');
+    }
+
+    public function registerForm(): void
+    {
+        $this->render('auth/register');
     }
 
     public function register(): void
     {
-        $this->render('auth/register', ['title' => 'Rejestracja — SharePlanner']);
+        // TODO: implement registration logic
+        $this->redirect('login');
     }
 }
