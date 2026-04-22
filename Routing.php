@@ -19,6 +19,7 @@ class Routing {
             ''          => ['SecurityController',  'loginForm'],
             'login'     => ['SecurityController',  'loginForm'],
             'register'  => ['SecurityController',  'registerForm'],
+            'logout'    => ['SecurityController',  'logout'],
             'dashboard' => ['DashboardController', 'index'],
             'calendar'  => ['CalendarController',  'index'],
             'groups'    => ['GroupsController',    'index'],

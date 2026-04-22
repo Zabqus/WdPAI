@@ -37,4 +37,20 @@ class AppController {
         exit;
     }
 
+    protected function requireLogin(): void
+    {
+        if (!Session::has('user_id')) {
+            $this->redirect('login');
+        }
+    }
+
+    protected function requireAdmin(): void
+    {
+        $this->requireLogin();
+
+        if (Session::get('user_role') !== 'admin') {
+            ErrorHandler::render(403);
+            exit;
+        }
+    }
 }
