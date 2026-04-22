@@ -19,89 +19,106 @@ CREATE TABLE users (
     id          SERIAL PRIMARY KEY,
     username    VARCHAR(50)  UNIQUE NOT NULL,
     email       VARCHAR(255) UNIQUE NOT NULL,
-    password    TEXT NOT NULL,
-    role        user_role DEFAULT 'user',
-    created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    is_active   BOOLEAN DEFAULT TRUE
+    password    TEXT         NOT NULL,
+    role        user_role    NOT NULL DEFAULT 'user',
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active   BOOLEAN      NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT chk_username_length CHECK (LENGTH(TRIM(username)) >= 3),
+    CONSTRAINT chk_email_format    CHECK (email ~* '^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$'),
+    CONSTRAINT chk_password_length CHECK (LENGTH(password) >= 8)
 );
 
 -- 1:1  profil/statystyki użytkownika
 CREATE TABLE user_profiles (
-    user_id     INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    user_id     INT         PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     avatar_url  TEXT,
-    bio         TEXT,
-    updated_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    bio         VARCHAR(500),
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 1:N  User -> Course
 CREATE TABLE courses (
     id          SERIAL PRIMARY KEY,
-    user_id     INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id     INT          NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name        VARCHAR(100) NOT NULL,
     description TEXT,
-    color       VARCHAR(7) DEFAULT '#6c63ff',
-    created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    color       VARCHAR(7)   NOT NULL DEFAULT '#6c63ff',
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_course_name  CHECK (LENGTH(TRIM(name)) > 0),
+    CONSTRAINT chk_course_color CHECK (color ~* '^#[0-9a-f]{6}$')
 );
 
 -- 1:N  Course -> Event
 CREATE TABLE events (
     id          SERIAL PRIMARY KEY,
-    course_id   INT NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    course_id   INT          NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
     title       VARCHAR(255) NOT NULL,
     description TEXT,
-    type        event_type DEFAULT 'other',
-    start_at    TIMESTAMPTZ NOT NULL,
+    type        event_type   NOT NULL DEFAULT 'other',
+    start_at    TIMESTAMPTZ  NOT NULL,
     end_at      TIMESTAMPTZ,
-    is_done     BOOLEAN DEFAULT FALSE,
-    created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    is_done     BOOLEAN      NOT NULL DEFAULT FALSE,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_event_title   CHECK (LENGTH(TRIM(title)) > 0),
+    CONSTRAINT chk_event_dates   CHECK (end_at IS NULL OR end_at > start_at)
 );
 
 -- 1:N  Event -> Task
 CREATE TABLE tasks (
     id          SERIAL PRIMARY KEY,
-    event_id    INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    event_id    INT          NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     title       VARCHAR(255) NOT NULL,
     description TEXT,
-    is_done     BOOLEAN DEFAULT FALSE,
-    created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    is_done     BOOLEAN      NOT NULL DEFAULT FALSE,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_task_title CHECK (LENGTH(TRIM(title)) > 0)
 );
 
 -- 1:N  Event -> Note  (opcjonalnie też Course -> Note)
 CREATE TABLE notes (
     id          SERIAL PRIMARY KEY,
-    user_id     INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    event_id    INT REFERENCES events(id) ON DELETE SET NULL,
-    course_id   INT REFERENCES courses(id) ON DELETE SET NULL,
+    user_id     INT          NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_id    INT          REFERENCES events(id)  ON DELETE SET NULL,
+    course_id   INT          REFERENCES courses(id) ON DELETE SET NULL,
     title       VARCHAR(255) NOT NULL,
     content     TEXT,
-    created_at  TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_note_title CHECK (LENGTH(TRIM(title)) > 0)
 );
 
 -- Plan nauki – przypisanie tasków do konkretnych dni
 CREATE TABLE study_plans (
     id           SERIAL PRIMARY KEY,
-    user_id      INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    task_id      INT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
-    planned_date DATE NOT NULL,
-    created_at   TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    user_id      INT         NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    task_id      INT         NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    planned_date DATE        NOT NULL,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     UNIQUE (user_id, task_id, planned_date)
 );
 
 -- M:N  User <-> Event  (współdzielenie)
 CREATE TABLE event_shares (
-    user_id      INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    event_id     INT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    access       access_level DEFAULT 'read',
-    shared_at    TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    user_id      INT          NOT NULL REFERENCES users(id)  ON DELETE CASCADE,
+    event_id     INT          NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    access       access_level NOT NULL DEFAULT 'read',
+    shared_at    TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     PRIMARY KEY (user_id, event_id)
 );
 
 -- M:N  User <-> Note  (współdzielenie)
 CREATE TABLE note_shares (
-    user_id      INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    note_id      INT NOT NULL REFERENCES notes(id) ON DELETE CASCADE,
-    access       access_level DEFAULT 'read',
-    shared_at    TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    user_id      INT          NOT NULL REFERENCES users(id)  ON DELETE CASCADE,
+    note_id      INT          NOT NULL REFERENCES notes(id)  ON DELETE CASCADE,
+    access       access_level NOT NULL DEFAULT 'read',
+    shared_at    TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     PRIMARY KEY (user_id, note_id)
 );
 
