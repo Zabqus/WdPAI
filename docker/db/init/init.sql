@@ -123,6 +123,41 @@ CREATE TABLE note_shares (
 );
 
 -- ------------------------------------------------------------
+--  INDEKSY
+-- ------------------------------------------------------------
+
+CREATE INDEX idx_courses_user_id    ON courses     (user_id);
+CREATE INDEX idx_events_course_id   ON events      (course_id);
+CREATE INDEX idx_tasks_event_id     ON tasks       (event_id);
+CREATE INDEX idx_notes_user_id      ON notes       (user_id);
+CREATE INDEX idx_notes_event_id     ON notes       (event_id);
+CREATE INDEX idx_notes_course_id    ON notes       (course_id);
+CREATE INDEX idx_study_plans_user   ON study_plans (user_id);
+CREATE INDEX idx_study_plans_task   ON study_plans (task_id);
+CREATE INDEX idx_events_start_at    ON events      (start_at);
+
+-- ------------------------------------------------------------
+--  FUNKCJA: procent ukończenia eventu
+-- ------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION get_completion_pct(p_event_id INT)
+RETURNS NUMERIC AS $$
+DECLARE
+    total INT;
+    done  INT;
+BEGIN
+    SELECT COUNT(*), COUNT(*) FILTER (WHERE is_done)
+    INTO total, done
+    FROM tasks
+    WHERE event_id = p_event_id;
+
+    RETURN CASE WHEN total = 0 THEN 0
+                ELSE ROUND(done::NUMERIC / total * 100, 2)
+           END;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ------------------------------------------------------------
 --  WIDOKI
 -- ------------------------------------------------------------
 
@@ -146,45 +181,21 @@ FROM events e
 JOIN courses c ON e.course_id = c.id
 JOIN users   u ON c.user_id   = u.id;
 
--- Widok 2: postęp nauki (% ukończonych tasków per event)
+-- Widok 2: postęp nauki – używa funkcji get_completion_pct
 CREATE VIEW v_event_progress AS
 SELECT
-    e.id          AS event_id,
-    e.title       AS event_title,
-    c.name        AS course_name,
-    u.id          AS user_id,
-    COUNT(t.id)                                        AS total_tasks,
-    COUNT(t.id) FILTER (WHERE t.is_done)               AS done_tasks,
-    ROUND(
-        COUNT(t.id) FILTER (WHERE t.is_done)::NUMERIC
-        / NULLIF(COUNT(t.id), 0) * 100, 2
-    )                                                  AS progress_pct
+    e.id                        AS event_id,
+    e.title                     AS event_title,
+    c.name                      AS course_name,
+    u.id                        AS user_id,
+    COUNT(t.id)                 AS total_tasks,
+    COUNT(t.id) FILTER (WHERE t.is_done) AS done_tasks,
+    get_completion_pct(e.id)    AS progress_pct
 FROM events  e
 JOIN courses c ON e.course_id = c.id
 JOIN users   u ON c.user_id   = u.id
 LEFT JOIN tasks t ON t.event_id = e.id
 GROUP BY e.id, e.title, c.name, u.id;
-
--- ------------------------------------------------------------
---  FUNKCJA: procent ukończenia eventu
--- ------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION get_completion_pct(p_event_id INT)
-RETURNS NUMERIC AS $$
-DECLARE
-    total INT;
-    done  INT;
-BEGIN
-    SELECT COUNT(*), COUNT(*) FILTER (WHERE is_done)
-    INTO total, done
-    FROM tasks
-    WHERE event_id = p_event_id;
-
-    RETURN CASE WHEN total = 0 THEN 0
-                ELSE ROUND(done::NUMERIC / total * 100, 2)
-           END;
-END;
-$$ LANGUAGE plpgsql;
 
 -- ------------------------------------------------------------
 --  WYZWALACZ: auto-update statusu eventu po zmianie tasków
@@ -216,39 +227,55 @@ AFTER INSERT OR UPDATE OF is_done ON tasks
 FOR EACH ROW EXECUTE FUNCTION trg_update_event_status();
 
 -- ------------------------------------------------------------
---  DANE PRZYKŁADOWE
+--  WYZWALACZ: auto-tworzenie profilu po rejestracji usera
 -- ------------------------------------------------------------
 
-INSERT INTO users (username, email, password, role) VALUES
-    ('admin',   'admin@example.com',   '$2y$12$placeholder_admin_hash',  'admin'),
-    ('jan',     'jan@example.com',     '$2y$12$placeholder_jan_hash',    'user'),
-    ('anna',    'anna@example.com',    '$2y$12$placeholder_anna_hash',   'user');
+CREATE OR REPLACE FUNCTION trg_create_user_profile()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO user_profiles (user_id) VALUES (NEW.id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-INSERT INTO user_profiles (user_id) VALUES (1), (2), (3);
+CREATE TRIGGER trg_user_profile
+AFTER INSERT ON users
+FOR EACH ROW EXECUTE FUNCTION trg_create_user_profile();
 
-INSERT INTO courses (user_id, name, color) VALUES
-    (2, 'Matematyka',         '#e74c3c'),
-    (2, 'Bazy Danych',        '#3498db'),
-    (3, 'Algorytmy',          '#2ecc71');
+-- ------------------------------------------------------------
+--  WYZWALACZ: blokada self-share (event i note)
+-- ------------------------------------------------------------
 
-INSERT INTO events (course_id, title, type, start_at, end_at) VALUES
-    (1, 'Kolokwium z analizy',   'colloquium', '2026-05-10 10:00+02', '2026-05-10 12:00+02'),
-    (2, 'Egzamin końcowy',       'exam',       '2026-06-20 09:00+02', '2026-06-20 11:00+02'),
-    (3, 'Kolokwium z grafów',    'colloquium', '2026-05-15 12:00+02', '2026-05-15 13:30+02');
+CREATE OR REPLACE FUNCTION trg_prevent_self_share()
+RETURNS TRIGGER AS $$
+DECLARE
+    owner_id INT;
+BEGIN
+    IF TG_TABLE_NAME = 'event_shares' THEN
+        SELECT c.user_id INTO owner_id
+        FROM events e
+        JOIN courses c ON e.course_id = c.id
+        WHERE e.id = NEW.event_id;
+    ELSIF TG_TABLE_NAME = 'note_shares' THEN
+        SELECT user_id INTO owner_id
+        FROM notes
+        WHERE id = NEW.note_id;
+    END IF;
 
-INSERT INTO tasks (event_id, title) VALUES
-    (1, 'Powtórz całki'),
-    (1, 'Rozwiąż zadania z szeregów'),
-    (2, 'Normalizacja do 3NF'),
-    (2, 'Zapytania SQL – ćwiczenia'),
-    (3, 'BFS i DFS – implementacja');
+    IF NEW.user_id = owner_id THEN
+        RAISE EXCEPTION 'Nie możesz udostępnić zasobu samemu sobie.';
+    END IF;
 
-INSERT INTO notes (user_id, event_id, course_id, title, content) VALUES
-    (2, 1, 1, 'Wzory całkowe', 'Całka z sin(x) = -cos(x) + C ...'),
-    (2, 2, 2, 'Widoki SQL',    'CREATE VIEW ... SELECT ... JOIN ...');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-INSERT INTO event_shares (user_id, event_id, access) VALUES
-    (3, 1, 'read');
+CREATE TRIGGER trg_no_self_share_event
+BEFORE INSERT ON event_shares
+FOR EACH ROW EXECUTE FUNCTION trg_prevent_self_share();
 
-INSERT INTO note_shares (user_id, note_id, access) VALUES
-    (3, 1, 'read');
+CREATE TRIGGER trg_no_self_share_note
+BEFORE INSERT ON note_shares
+FOR EACH ROW EXECUTE FUNCTION trg_prevent_self_share();
+
+-- dane testowe znajdują się w seed.sql
