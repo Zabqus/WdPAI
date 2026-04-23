@@ -57,6 +57,24 @@ class Database {
         return $this->pdo->lastInsertId();
     }
 
+    public function beginTransaction(string $isolationLevel = 'READ COMMITTED'): void
+    {
+        $this->pdo->exec("SET TRANSACTION ISOLATION LEVEL $isolationLevel");
+        $this->pdo->beginTransaction();
+    }
+
+    public function commit(): void
+    {
+        $this->pdo->commit();
+    }
+
+    public function rollback(): void
+    {
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+    }
+
     // Prevent cloning and unserialization
     private function __clone() {}
     public function __wakeup(): never

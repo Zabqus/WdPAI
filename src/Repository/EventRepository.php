@@ -44,6 +44,29 @@ class EventRepository
         return array_map(fn($r) => $this->map($r), $rows);
     }
 
+    /**
+     * Zwraca wiersze z widoku v_events_with_course (surowe tablice z danymi kursu i usera).
+     * Używane gdy potrzebujemy danych z wielu tabel naraz (np. kalendarz, dashboard).
+     * @return array[]
+     */
+    public function findWithCourseByUserId(int $userId): array
+    {
+        return $this->db->fetchAll(
+            'SELECT * FROM v_events_with_course WHERE user_id = :uid ORDER BY start_at',
+            ['uid' => $userId]
+        );
+    }
+
+    /** @return array[] */
+    public function findWithCourseById(int $eventId): ?array
+    {
+        $row = $this->db->fetchOne(
+            'SELECT * FROM v_events_with_course WHERE event_id = :id',
+            ['id' => $eventId]
+        );
+        return $row ?: null;
+    }
+
     public function create(int $courseId, string $title, ?string $description, string $type, string $startAt, ?string $endAt): Event
     {
         $this->db->execute(
@@ -53,6 +76,49 @@ class EventRepository
              'type' => $type, 'start' => $startAt, 'end' => $endAt]
         );
         return $this->findById((int) $this->db->lastInsertId());
+    }
+
+    /**
+     * Tworzy event wraz z listą tasków w jednej transakcji (REPEATABLE READ).
+     * Gwarantuje że albo wszystko się zapisze, albo nic.
+     * @param string[] $taskTitles
+     */
+    public function createWithTasks(
+        int     $courseId,
+        string  $title,
+        ?string $description,
+        string  $type,
+        string  $startAt,
+        ?string $endAt,
+        array   $taskTitles
+    ): Event {
+        $this->db->beginTransaction('REPEATABLE READ');
+
+        try {
+            $this->db->execute(
+                'INSERT INTO events (course_id, title, description, type, start_at, end_at)
+                 VALUES (:cid, :title, :desc, :type, :start, :end)',
+                ['cid' => $courseId, 'title' => $title, 'desc' => $description,
+                 'type' => $type, 'start' => $startAt, 'end' => $endAt]
+            );
+            $eventId = (int) $this->db->lastInsertId();
+
+            foreach ($taskTitles as $taskTitle) {
+                if (trim($taskTitle) === '') {
+                    continue;
+                }
+                $this->db->execute(
+                    'INSERT INTO tasks (event_id, title) VALUES (:eid, :title)',
+                    ['eid' => $eventId, 'title' => trim($taskTitle)]
+                );
+            }
+
+            $this->db->commit();
+            return $this->findById($eventId);
+        } catch (\Throwable $e) {
+            $this->db->rollback();
+            throw $e;
+        }
     }
 
     public function update(int $id, string $title, ?string $description, string $type, string $startAt, ?string $endAt): bool

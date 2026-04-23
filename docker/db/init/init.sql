@@ -127,10 +127,11 @@ CREATE TABLE note_shares (
 -- ------------------------------------------------------------
 
 -- Widok 1: wydarzenia z przedmiotem i właścicielem
-CREATE VIEW view_events_full AS
+CREATE VIEW v_events_with_course AS
 SELECT
     e.id          AS event_id,
     e.title       AS event_title,
+    e.description AS event_description,
     e.type,
     e.start_at,
     e.end_at,
@@ -146,7 +147,7 @@ JOIN courses c ON e.course_id = c.id
 JOIN users   u ON c.user_id   = u.id;
 
 -- Widok 2: postęp nauki (% ukończonych tasków per event)
-CREATE VIEW view_event_progress AS
+CREATE VIEW v_event_progress AS
 SELECT
     e.id          AS event_id,
     e.title       AS event_title,
@@ -168,7 +169,7 @@ GROUP BY e.id, e.title, c.name, u.id;
 --  FUNKCJA: procent ukończenia eventu
 -- ------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION get_event_progress(p_event_id INT)
+CREATE OR REPLACE FUNCTION get_completion_pct(p_event_id INT)
 RETURNS NUMERIC AS $$
 DECLARE
     total INT;
@@ -186,10 +187,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- ------------------------------------------------------------
---  WYZWALACZ: auto-zakończenie eventu gdy wszystkie taski done
+--  WYZWALACZ: auto-update statusu eventu po zmianie tasków
 -- ------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION trg_check_event_done()
+CREATE OR REPLACE FUNCTION trg_update_event_status()
 RETURNS TRIGGER AS $$
 DECLARE
     total INT;
@@ -210,9 +211,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_event_done
+CREATE TRIGGER trg_event_status
 AFTER INSERT OR UPDATE OF is_done ON tasks
-FOR EACH ROW EXECUTE FUNCTION trg_check_event_done();
+FOR EACH ROW EXECUTE FUNCTION trg_update_event_status();
 
 -- ------------------------------------------------------------
 --  DANE PRZYKŁADOWE
