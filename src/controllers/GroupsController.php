@@ -6,8 +6,9 @@ class GroupsController extends AppController {
 
     public function index(): void
     {
+        $this->requireLogin();
         $this->render('groups', [
-            'userName' => $_SESSION['user_name'] ?? 'Alex',
+            'userName' => Session::get('user_name'),
         ]);
     }
 }

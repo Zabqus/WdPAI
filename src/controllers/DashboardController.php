@@ -7,9 +7,10 @@ class DashboardController extends AppController {
 
     public function index(): void
     {
+        $this->requireLogin();
         $this->render('dashboard', [
             'title'    => 'Dashboard — SharePlanner',
-            'userName' => $_SESSION['user_name'] ?? 'Studencie',
+            'userName' => Session::get('user_name', 'Studencie'),
         ]);
     }
 }

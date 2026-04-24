@@ -6,8 +6,9 @@ class CalendarController extends AppController {
 
     public function index(): void
     {
+        $this->requireLogin();
         $this->render('calendar', [
-            'userName' => $_SESSION['user_name'] ?? 'Alex',
+            'userName' => Session::get('user_name'),
         ]);
     }
 }

@@ -39,11 +39,37 @@ class UserRepository
 
     public function create(string $username, string $email, string $password, string $role = 'user'): User
     {
-        $this->db->execute(
-            'INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)',
+        $row = $this->db->fetchOne(
+            'INSERT INTO users (username, email, password, role)
+             VALUES (:username, :email, :password, :role)
+             RETURNING id',
             ['username' => $username, 'email' => $email, 'password' => $password, 'role' => $role]
         );
-        return $this->findById((int) $this->db->lastInsertId());
+        return $this->findById((int) $row['id']);
+    }
+
+    public function update(int $id, string $username, string $email): bool
+    {
+        return $this->db->execute(
+            'UPDATE users SET username = :username, email = :email WHERE id = :id',
+            ['username' => $username, 'email' => $email, 'id' => $id]
+        ) > 0;
+    }
+
+    public function updatePassword(int $id, string $hashedPassword): bool
+    {
+        return $this->db->execute(
+            'UPDATE users SET password = :password WHERE id = :id',
+            ['password' => $hashedPassword, 'id' => $id]
+        ) > 0;
+    }
+
+    public function delete(int $id): bool
+    {
+        return $this->db->execute(
+            'DELETE FROM users WHERE id = :id',
+            ['id' => $id]
+        ) > 0;
     }
 
     public function setActive(int $id, bool $active): bool
