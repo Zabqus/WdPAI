@@ -3,7 +3,7 @@
 require_once 'src/controllers/AppController.php';
 require_once 'src/controllers/ErrorHandler.php';
 require_once 'src/controllers/Session.php';
-require_once 'src/controllers/SecurityController.php';
+require_once 'src/controllers/AuthController.php';
 require_once 'src/controllers/DashboardController.php';
 require_once 'src/controllers/CalendarController.php';
 require_once 'src/controllers/GroupsController.php';
@@ -16,17 +16,17 @@ class Routing {
      */
     private static array $routes = [
         'GET' => [
-            ''          => ['SecurityController',  'loginForm'],
-            'login'     => ['SecurityController',  'loginForm'],
-            'register'  => ['SecurityController',  'registerForm'],
-            'logout'    => ['SecurityController',  'logout'],
+            ''          => ['AuthController',  'loginForm'],
+            'login'     => ['AuthController',  'loginForm'],
+            'register'  => ['AuthController',  'registerForm'],
+            'logout'    => ['AuthController',  'logout'],
             'dashboard' => ['DashboardController', 'index'],
             'calendar'  => ['CalendarController',  'index'],
             'groups'    => ['GroupsController',    'index'],
         ],
         'POST' => [
-            'login'    => ['SecurityController', 'login'],
-            'register' => ['SecurityController', 'register'],
+            'login'    => ['AuthController', 'login'],
+            'register' => ['AuthController', 'register'],
         ],
     ];
 
