@@ -7,6 +7,7 @@ require_once 'src/controllers/AuthController.php';
 require_once 'src/controllers/DashboardController.php';
 require_once 'src/controllers/CalendarController.php';
 require_once 'src/controllers/GroupsController.php';
+require_once 'src/controllers/AdminController.php';
 
 class Routing {
 
@@ -19,15 +20,22 @@ class Routing {
             'dashboard' => ['DashboardController', 'index'],
             'calendar'  => ['CalendarController',  'index'],
             'groups'    => ['GroupsController',    'index'],
+            'admin'     => ['AdminController',     'index'],
         ],
         'POST' => [
-            'login'    => ['AuthController', 'login'],
-            'register' => ['AuthController', 'register'],
+            'login'        => ['AuthController',  'login'],
+            'register'     => ['AuthController',  'register'],
+            'admin/role'   => ['AdminController', 'updateRole'],
+            'admin/delete' => ['AdminController', 'delete'],
         ],
     ];
 
     private static array $protected = [
         'dashboard', 'calendar', 'groups',
+    ];
+
+    private static array $adminOnly = [
+        'admin', 'admin/role', 'admin/delete',
     ];
 
     public static function run(string $path): void
@@ -48,6 +56,7 @@ class Routing {
         }
 
         self::authGuard($path);
+        self::roleGuard($path);
 
         [$controllerName, $action] = $methodRoutes[$path];
         (new $controllerName)->$action();
@@ -55,12 +64,23 @@ class Routing {
 
     private static function authGuard(string $path): void
     {
-        if (!in_array($path, self::$protected, true)) {
+        $requiresAuth = in_array($path, self::$protected, true)
+                     || in_array($path, self::$adminOnly, true);
+
+        if ($requiresAuth && !Session::has('user_id')) {
+            header('Location: /login');
+            exit;
+        }
+    }
+
+    private static function roleGuard(string $path): void
+    {
+        if (!in_array($path, self::$adminOnly, true)) {
             return;
         }
 
-        if (!Session::has('user_id')) {
-            header('Location: /login');
+        if (Session::get('user_role') !== 'admin') {
+            ErrorHandler::render(403);
             exit;
         }
     }
