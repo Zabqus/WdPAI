@@ -10,16 +10,12 @@ require_once 'src/controllers/GroupsController.php';
 
 class Routing {
 
-    /**
-     * Routes keyed by HTTP method then path.
-     * Format: 'METHOD' => [ 'path' => ['controller', 'action'] ]
-     */
     private static array $routes = [
         'GET' => [
-            ''          => ['AuthController',  'loginForm'],
-            'login'     => ['AuthController',  'loginForm'],
-            'register'  => ['AuthController',  'registerForm'],
-            'logout'    => ['AuthController',  'logout'],
+            ''          => ['AuthController',      'loginForm'],
+            'login'     => ['AuthController',      'loginForm'],
+            'register'  => ['AuthController',      'registerForm'],
+            'logout'    => ['AuthController',      'logout'],
             'dashboard' => ['DashboardController', 'index'],
             'calendar'  => ['CalendarController',  'index'],
             'groups'    => ['GroupsController',    'index'],
@@ -30,6 +26,10 @@ class Routing {
         ],
     ];
 
+    private static array $protected = [
+        'dashboard', 'calendar', 'groups',
+    ];
+
     public static function run(string $path): void
     {
         Session::start();
@@ -38,15 +38,30 @@ class Routing {
 
         $methodRoutes = self::$routes[$method] ?? [];
 
-        if (array_key_exists($path, $methodRoutes)) {
-            [$controllerName, $action] = $methodRoutes[$path];
-            $controller = new $controllerName;
-            $controller->$action();
-        } elseif ($method === 'POST' && array_key_exists($path, self::$routes['GET'])) {
-            // POST to a GET-only route — method not allowed
-            ErrorHandler::render(400);
-        } else {
-            ErrorHandler::render(404);
+        if (!array_key_exists($path, $methodRoutes)) {
+            if ($method === 'POST' && array_key_exists($path, self::$routes['GET'])) {
+                ErrorHandler::render(400);
+            } else {
+                ErrorHandler::render(404);
+            }
+            return;
+        }
+
+        self::authGuard($path);
+
+        [$controllerName, $action] = $methodRoutes[$path];
+        (new $controllerName)->$action();
+    }
+
+    private static function authGuard(string $path): void
+    {
+        if (!in_array($path, self::$protected, true)) {
+            return;
+        }
+
+        if (!Session::has('user_id')) {
+            header('Location: /login');
+            exit;
         }
     }
 }

@@ -11,9 +11,9 @@
 -- ------------------------------------------------------------
 
 INSERT INTO users (username, email, password, role) VALUES
-    ('admin', 'admin@example.com', '$2y$12$placeholder_admin_hash',  'admin'),
-    ('jan',   'jan@example.com',   '$2y$12$placeholder_jan_hash',    'user'),
-    ('anna',  'anna@example.com',  '$2y$12$placeholder_anna_hash',   'user');
+    ('admin', 'admin@example.com', '$2y$12$N2vImdnZFh03d0N4YyhOuu7A68gsjGpoG9PHOdvSihUj4MAcLrPKO', 'admin'),
+    ('jan',   'jan@example.com',   '$2y$12$GZLj0WeHaZcjJ5EbOq4wY.XRHdFuVEy5MOUvVTpLB4GAogxW32ZLW', 'user'),
+    ('anna',  'anna@example.com',  '$2y$12$GZLj0WeHaZcjJ5EbOq4wY.XRHdFuVEy5MOUvVTpLB4GAogxW32ZLW', 'user');
 
 -- ------------------------------------------------------------
 --  COURSES
