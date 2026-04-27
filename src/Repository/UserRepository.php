@@ -48,6 +48,14 @@ class UserRepository
         return $this->findById((int) $row['id']);
     }
 
+    public function updateRole(int $id, string $role): bool
+    {
+        return $this->db->execute(
+            'UPDATE users SET role = :role WHERE id = :id',
+            ['role' => $role, 'id' => $id]
+        ) > 0;
+    }
+
     public function update(int $id, string $username, string $email): bool
     {
         return $this->db->execute(

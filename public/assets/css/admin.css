@@ -1,0 +1,115 @@
+.admin-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.admin-table th {
+    background: var(--surface-2, #1e2d2f);
+    color: var(--text-light, #8fa8aa);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: .06em;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border, #2a3f42);
+}
+
+.admin-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border, #2a3f42);
+    color: var(--text, #d4e0e1);
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td { border-bottom: none; }
+
+.admin-table tbody tr:hover { background: rgba(27,104,113,.08); }
+
+.admin-row--self { background: rgba(27,104,113,.05); }
+
+.admin-td-id   { color: var(--text-light, #8fa8aa); width: 48px; }
+.admin-td-date { color: var(--text-light, #8fa8aa); white-space: nowrap; }
+.admin-td-na   { color: var(--text-light, #8fa8aa); }
+
+.admin-user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.admin-badge-you {
+    font-size: 0.65rem;
+    background: var(--accent, #1b6871);
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-weight: 600;
+}
+
+.admin-role-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.admin-role-admin { background: rgba(27,104,113,.25); color: #56c4ce; }
+.admin-role-user  { background: rgba(143,168,170,.15); color: #8fa8aa; }
+
+.admin-role-form { margin: 0; }
+
+.admin-select {
+    background: var(--surface-2, #1e2d2f);
+    border: 1px solid var(--border, #2a3f42);
+    color: var(--text, #d4e0e1);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.admin-select:focus { outline: none; border-color: var(--accent, #1b6871); }
+
+.admin-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.admin-status--on  { background: rgba(46,204,113,.15); color: #2ecc71; }
+.admin-status--off { background: rgba(231,76,60,.15);  color: #e74c3c; }
+
+.admin-btn-delete {
+    background: transparent;
+    border: 1px solid rgba(231,76,60,.4);
+    color: #e74c3c;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background .15s;
+}
+
+.admin-btn-delete:hover {
+    background: rgba(231,76,60,.12);
+}
