@@ -8,6 +8,7 @@ require_once 'src/controllers/DashboardController.php';
 require_once 'src/controllers/CalendarController.php';
 require_once 'src/controllers/GroupsController.php';
 require_once 'src/controllers/AdminController.php';
+require_once 'src/controllers/CsrfGuard.php';
 
 class Routing {
 
@@ -57,6 +58,10 @@ class Routing {
 
         self::authGuard($path);
         self::roleGuard($path);
+
+        if ($method === 'POST') {
+            CsrfGuard::validate();
+        }
 
         [$controllerName, $action] = $methodRoutes[$path];
         (new $controllerName)->$action();

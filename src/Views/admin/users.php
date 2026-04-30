@@ -66,6 +66,7 @@
                             <span class="admin-role-badge admin-role-<?= $user->getRole() ?>"><?= $user->getRole() ?></span>
                         <?php else: ?>
                             <form method="POST" action="/admin/role" class="admin-role-form">
+                                <?= CsrfGuard::field() ?>
                                 <input type="hidden" name="user_id" value="<?= $user->getId() ?>">
                                 <select name="role" class="admin-select" onchange="this.form.submit()">
                                     <option value="user"  <?= $user->getRole() === 'user'  ? 'selected' : '' ?>>user</option>
@@ -84,6 +85,7 @@
                         <?php if (!$isSelf): ?>
                             <form method="POST" action="/admin/delete"
                                   onsubmit="return confirm('Usunąć użytkownika <?= htmlspecialchars($user->getUsername(), ENT_QUOTES) ?>?')">
+                                <?= CsrfGuard::field() ?>
                                 <input type="hidden" name="user_id" value="<?= $user->getId() ?>">
                                 <button type="submit" class="admin-btn-delete">
                                     <i class="fa-regular fa-trash-can"></i> Usuń

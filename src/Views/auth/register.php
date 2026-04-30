@@ -65,6 +65,7 @@
             <?php endif; ?>
 
             <form method="POST" action="/register">
+                <?= CsrfGuard::field() ?>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                     <div class="form-group" style="margin-bottom:0;">

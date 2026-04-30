@@ -54,6 +54,7 @@
             <?php endif; ?>
 
             <form method="POST" action="/login" class="auth-form" novalidate>
+                <?= CsrfGuard::field() ?>
 
                 <div class="auth-field">
                     <label class="auth-label" for="email">Email Address</label>
