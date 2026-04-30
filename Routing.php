@@ -73,7 +73,13 @@ class Routing {
         $requiresAuth = in_array($path, self::$protected, true)
                      || in_array($path, self::$adminOnly, true);
 
-        if ($requiresAuth && !Session::has('user_id')) {
+        if (!$requiresAuth || Session::has('user_id')) {
+            return;
+        }
+
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
+            ErrorHandler::render(401);
+        } else {
             header('Location: /login');
             exit;
         }
