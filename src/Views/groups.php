@@ -26,6 +26,9 @@
             <a href="/dashboard" class="db-nav-link">Dashboard</a>
             <a href="/calendar"  class="db-nav-link">Calendar</a>
             <a href="/groups"    class="db-nav-link active">Study Groups</a>
+            <?php if (Session::get('user_role') === 'admin'): ?>
+                <a href="/admin" class="db-nav-link db-nav-link--admin">Admin</a>
+            <?php endif; ?>
         </nav>
 
         <div class="db-navbar-right">

@@ -35,6 +35,25 @@ class AdminController extends AppController
         $this->redirect('admin');
     }
 
+    public function toggleActive(): void
+    {
+        $id = (int) ($_POST['user_id'] ?? 0);
+
+        if ($id === Session::get('user_id')) {
+            $this->redirect('admin');
+            return;
+        }
+
+        $user = $this->users->findById($id);
+        if ($user === null) {
+            $this->redirect('admin');
+            return;
+        }
+
+        $this->users->setActive($id, !$user->isActive());
+        $this->redirect('admin');
+    }
+
     public function delete(): void
     {
         $id = (int) ($_POST['user_id'] ?? 0);

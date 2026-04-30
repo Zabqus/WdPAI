@@ -28,6 +28,7 @@ class Routing {
             'register'     => ['AuthController',  'register'],
             'admin/role'   => ['AdminController', 'updateRole'],
             'admin/delete' => ['AdminController', 'delete'],
+            'admin/toggle' => ['AdminController', 'toggleActive'],
         ],
     ];
 
@@ -36,7 +37,7 @@ class Routing {
     ];
 
     private static array $adminOnly = [
-        'admin', 'admin/role', 'admin/delete',
+        'admin', 'admin/role', 'admin/delete', 'admin/toggle',
     ];
 
     public static function run(string $path): void

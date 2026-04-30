@@ -1,3 +1,11 @@
+.db-nav-link--admin {
+    color: #e67e22;
+    border-bottom-color: transparent;
+}
+.db-nav-link--admin:hover {
+    color: #d35400;
+}
+
 .admin-card {
     padding: 0;
     overflow: hidden;
@@ -95,6 +103,16 @@
 
 .admin-status--on  { background: rgba(46,204,113,.15); color: #2ecc71; }
 .admin-status--off { background: rgba(231,76,60,.15);  color: #e74c3c; }
+
+.admin-status--btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: opacity .15s;
+}
+.admin-status--btn:hover { opacity: .75; }
 
 .admin-btn-delete {
     background: transparent;

@@ -76,9 +76,17 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <span class="admin-status <?= $user->isActive() ? 'admin-status--on' : 'admin-status--off' ?>">
-                            <?= $user->isActive() ? 'tak' : 'nie' ?>
-                        </span>
+                        <?php if ($isSelf): ?>
+                            <span class="admin-status admin-status--on">tak</span>
+                        <?php else: ?>
+                            <form method="POST" action="/admin/toggle">
+                                <?= CsrfGuard::field() ?>
+                                <input type="hidden" name="user_id" value="<?= $user->getId() ?>">
+                                <button type="submit" class="admin-status admin-status--<?= $user->isActive() ? 'on' : 'off' ?> admin-status--btn">
+                                    <?= $user->isActive() ? 'tak' : 'nie' ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     </td>
                     <td class="admin-td-date"><?= date('d.m.Y', strtotime($user->getCreatedAt())) ?></td>
                     <td>
