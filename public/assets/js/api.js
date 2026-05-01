@@ -8,9 +8,14 @@ const Api = (function () {
     const BASE = '';
 
     async function request(method, endpoint, data = null) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
         const opts = {
             method,
-            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                ...(method !== 'GET' && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+            },
         };
         if (data) opts.body = JSON.stringify(data);
 

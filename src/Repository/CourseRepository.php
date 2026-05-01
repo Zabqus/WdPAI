@@ -33,11 +33,11 @@ class CourseRepository
 
     public function create(int $userId, string $name, ?string $description, string $color = '#6c63ff'): Course
     {
-        $this->db->execute(
-            'INSERT INTO courses (user_id, name, description, color) VALUES (:uid, :name, :desc, :color)',
+        $row = $this->db->fetchOne(
+            'INSERT INTO courses (user_id, name, description, color) VALUES (:uid, :name, :desc, :color) RETURNING id',
             ['uid' => $userId, 'name' => $name, 'desc' => $description, 'color' => $color]
         );
-        return $this->findById((int) $this->db->lastInsertId());
+        return $this->findById((int) $row['id']);
     }
 
     public function update(int $id, string $name, ?string $description, string $color): bool

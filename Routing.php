@@ -8,32 +8,40 @@ require_once 'src/controllers/DashboardController.php';
 require_once 'src/controllers/CalendarController.php';
 require_once 'src/controllers/GroupsController.php';
 require_once 'src/controllers/AdminController.php';
+require_once 'src/controllers/CourseController.php';
 require_once 'src/controllers/CsrfGuard.php';
 
 class Routing {
 
     private static array $routes = [
         'GET' => [
-            ''          => ['AuthController',      'loginForm'],
-            'login'     => ['AuthController',      'loginForm'],
-            'register'  => ['AuthController',      'registerForm'],
-            'logout'    => ['AuthController',      'logout'],
-            'dashboard' => ['DashboardController', 'index'],
-            'calendar'  => ['CalendarController',  'index'],
-            'groups'    => ['GroupsController',    'index'],
-            'admin'     => ['AdminController',     'index'],
+            ''            => ['AuthController',      'loginForm'],
+            'login'       => ['AuthController',      'loginForm'],
+            'register'    => ['AuthController',      'registerForm'],
+            'logout'      => ['AuthController',      'logout'],
+            'dashboard'   => ['DashboardController', 'index'],
+            'calendar'    => ['CalendarController',  'index'],
+            'groups'      => ['GroupsController',    'index'],
+            'admin'       => ['AdminController',     'index'],
+            'courses'     => ['CourseController',    'index'],
+            'api/courses' => ['CourseController',    'list'],
         ],
         'POST' => [
-            'login'        => ['AuthController',  'login'],
-            'register'     => ['AuthController',  'register'],
-            'admin/role'   => ['AdminController', 'updateRole'],
-            'admin/delete' => ['AdminController', 'delete'],
-            'admin/toggle' => ['AdminController', 'toggleActive'],
+            'login'          => ['AuthController',  'login'],
+            'register'       => ['AuthController',  'register'],
+            'admin/role'     => ['AdminController', 'updateRole'],
+            'admin/delete'   => ['AdminController', 'delete'],
+            'admin/toggle'   => ['AdminController', 'toggleActive'],
+            'courses/create' => ['CourseController', 'create'],
+            'courses/update' => ['CourseController', 'update'],
+            'courses/delete' => ['CourseController', 'delete'],
         ],
     ];
 
     private static array $protected = [
         'dashboard', 'calendar', 'groups',
+        'courses', 'api/courses',
+        'courses/create', 'courses/update', 'courses/delete',
     ];
 
     private static array $adminOnly = [

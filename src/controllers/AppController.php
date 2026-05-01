@@ -66,4 +66,10 @@ class AppController {
         echo json_encode($data);
         exit;
     }
+
+    protected function jsonBody(): array
+    {
+        $raw = file_get_contents('php://input');
+        return json_decode($raw, true) ?? [];
+    }
 }

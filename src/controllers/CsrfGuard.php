@@ -20,8 +20,10 @@ class CsrfGuard
 
     public static function validate(): void
     {
-        $submitted = $_POST['_csrf'] ?? '';
-        $stored    = Session::get(self::KEY, '');
+        // HTML forms send token in $_POST; AJAX JSON requests send it as a header
+        $fromHeader = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        $submitted  = $_POST['_csrf'] ?? $fromHeader;
+        $stored     = Session::get(self::KEY, '');
 
         if ($stored === '' || !hash_equals($stored, $submitted)) {
             ErrorHandler::render(403);
