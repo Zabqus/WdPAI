@@ -45,8 +45,7 @@ class EventRepository
     }
 
     /**
-     * Zwraca wiersze z widoku v_events_with_course (surowe tablice z danymi kursu i usera).
-     * Używane gdy potrzebujemy danych z wielu tabel naraz (np. kalendarz, dashboard).
+     * Wiersze z widoku v_events_with_course dla danego użytkownika.
      * @return array[]
      */
     public function findWithCourseByUserId(int $userId): array
@@ -57,7 +56,19 @@ class EventRepository
         );
     }
 
-    /** @return array[] */
+    /**
+     * Wiersze z widoku v_events_with_course dla danego kursu.
+     * @return array[]
+     */
+    public function findWithCourseByCourseId(int $courseId): array
+    {
+        return $this->db->fetchAll(
+            'SELECT * FROM v_events_with_course WHERE course_id = :cid ORDER BY start_at',
+            ['cid' => $courseId]
+        );
+    }
+
+    /** @return array|null */
     public function findWithCourseById(int $eventId): ?array
     {
         $row = $this->db->fetchOne(
@@ -69,18 +80,18 @@ class EventRepository
 
     public function create(int $courseId, string $title, ?string $description, string $type, string $startAt, ?string $endAt): Event
     {
-        $this->db->execute(
+        $row = $this->db->fetchOne(
             'INSERT INTO events (course_id, title, description, type, start_at, end_at)
-             VALUES (:cid, :title, :desc, :type, :start, :end)',
+             VALUES (:cid, :title, :desc, :type, :start, :end)
+             RETURNING id',
             ['cid' => $courseId, 'title' => $title, 'desc' => $description,
              'type' => $type, 'start' => $startAt, 'end' => $endAt]
         );
-        return $this->findById((int) $this->db->lastInsertId());
+        return $this->findById((int) $row['id']);
     }
 
     /**
      * Tworzy event wraz z listą tasków w jednej transakcji (REPEATABLE READ).
-     * Gwarantuje że albo wszystko się zapisze, albo nic.
      * @param string[] $taskTitles
      */
     public function createWithTasks(
@@ -95,18 +106,17 @@ class EventRepository
         $this->db->beginTransaction('REPEATABLE READ');
 
         try {
-            $this->db->execute(
+            $row = $this->db->fetchOne(
                 'INSERT INTO events (course_id, title, description, type, start_at, end_at)
-                 VALUES (:cid, :title, :desc, :type, :start, :end)',
+                 VALUES (:cid, :title, :desc, :type, :start, :end)
+                 RETURNING id',
                 ['cid' => $courseId, 'title' => $title, 'desc' => $description,
                  'type' => $type, 'start' => $startAt, 'end' => $endAt]
             );
-            $eventId = (int) $this->db->lastInsertId();
+            $eventId = (int) $row['id'];
 
             foreach ($taskTitles as $taskTitle) {
-                if (trim($taskTitle) === '') {
-                    continue;
-                }
+                if (trim($taskTitle) === '') continue;
                 $this->db->execute(
                     'INSERT INTO tasks (event_id, title) VALUES (:eid, :title)',
                     ['eid' => $eventId, 'title' => trim($taskTitle)]
@@ -121,12 +131,23 @@ class EventRepository
         }
     }
 
-    public function update(int $id, string $title, ?string $description, string $type, string $startAt, ?string $endAt): bool
+    public function update(int $id, int $courseId, string $title, ?string $description, string $type, string $startAt, ?string $endAt): bool
     {
         return $this->db->execute(
-            'UPDATE events SET title = :title, description = :desc, type = :type, start_at = :start, end_at = :end WHERE id = :id',
-            ['title' => $title, 'desc' => $description, 'type' => $type,
-             'start' => $startAt, 'end' => $endAt, 'id' => $id]
+            'UPDATE events
+             SET course_id = :cid, title = :title, description = :desc,
+                 type = :type, start_at = :start, end_at = :end
+             WHERE id = :id',
+            ['cid' => $courseId, 'title' => $title, 'desc' => $description,
+             'type' => $type, 'start' => $startAt, 'end' => $endAt, 'id' => $id]
+        ) > 0;
+    }
+
+    public function setDone(int $id, bool $isDone): bool
+    {
+        return $this->db->execute(
+            'UPDATE events SET is_done = :done WHERE id = :id',
+            ['done' => $isDone, 'id' => $id]
         ) > 0;
     }
 
