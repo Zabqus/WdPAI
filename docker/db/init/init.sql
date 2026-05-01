@@ -73,6 +73,7 @@ CREATE TABLE tasks (
     title       VARCHAR(255) NOT NULL,
     description TEXT,
     is_done     BOOLEAN      NOT NULL DEFAULT FALSE,
+    position    INT          NOT NULL DEFAULT 0,
     created_at  TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT chk_task_title CHECK (LENGTH(TRIM(title)) > 0)
@@ -129,6 +130,7 @@ CREATE TABLE note_shares (
 CREATE INDEX idx_courses_user_id    ON courses     (user_id);
 CREATE INDEX idx_events_course_id   ON events      (course_id);
 CREATE INDEX idx_tasks_event_id     ON tasks       (event_id);
+CREATE INDEX idx_tasks_position     ON tasks       (event_id, position);
 CREATE INDEX idx_notes_user_id      ON notes       (user_id);
 CREATE INDEX idx_notes_event_id     ON notes       (event_id);
 CREATE INDEX idx_notes_course_id    ON notes       (course_id);

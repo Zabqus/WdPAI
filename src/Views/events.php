@@ -193,6 +193,7 @@
 <div class="ev-toast" id="ev-toast" role="status" aria-live="polite"></div>
 
 <script src="/public/assets/js/api.js"></script>
+<script src="/public/assets/js/tasks.js"></script>
 <script src="/public/assets/js/events.js"></script>
 </body>
 </html>

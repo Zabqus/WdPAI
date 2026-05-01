@@ -7,6 +7,7 @@ class Task
     private string  $title;
     private ?string $description;
     private bool    $isDone;
+    private int     $position;
     private string  $createdAt;
 
     public function __construct(
@@ -15,6 +16,7 @@ class Task
         string  $title,
         ?string $description,
         bool    $isDone,
+        int     $position,
         string  $createdAt
     ) {
         $this->id          = $id;
@@ -22,6 +24,7 @@ class Task
         $this->title       = $title;
         $this->description = $description;
         $this->isDone      = $isDone;
+        $this->position    = $position;
         $this->createdAt   = $createdAt;
     }
 
@@ -30,5 +33,6 @@ class Task
     public function getTitle():       string  { return $this->title; }
     public function getDescription(): ?string { return $this->description; }
     public function isDone():         bool    { return $this->isDone; }
+    public function getPosition():    int     { return $this->position; }
     public function getCreatedAt():   string  { return $this->createdAt; }
 }

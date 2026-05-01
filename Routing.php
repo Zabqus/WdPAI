@@ -10,6 +10,7 @@ require_once 'src/controllers/GroupsController.php';
 require_once 'src/controllers/AdminController.php';
 require_once 'src/controllers/CourseController.php';
 require_once 'src/controllers/EventController.php';
+require_once 'src/controllers/TaskController.php';
 require_once 'src/controllers/CsrfGuard.php';
 
 class Routing {
@@ -28,6 +29,7 @@ class Routing {
             'api/courses' => ['CourseController',    'list'],
             'events'      => ['EventController',     'index'],
             'api/events'  => ['EventController',     'list'],
+            'api/tasks'   => ['TaskController',      'list'],
         ],
         'POST' => [
             'login'          => ['AuthController',  'login'],
@@ -42,6 +44,11 @@ class Routing {
             'events/update'  => ['EventController',  'update'],
             'events/delete'  => ['EventController',  'delete'],
             'events/toggle'  => ['EventController',  'toggle'],
+            'tasks/create'   => ['TaskController',   'create'],
+            'tasks/toggle'   => ['TaskController',   'toggle'],
+            'tasks/update'   => ['TaskController',   'update'],
+            'tasks/delete'   => ['TaskController',   'delete'],
+            'tasks/reorder'  => ['TaskController',   'reorder'],
         ],
     ];
 
@@ -51,6 +58,8 @@ class Routing {
         'courses/create', 'courses/update', 'courses/delete',
         'events', 'api/events',
         'events/create', 'events/update', 'events/delete', 'events/toggle',
+        'api/tasks',
+        'tasks/create', 'tasks/toggle', 'tasks/update', 'tasks/delete', 'tasks/reorder',
     ];
 
     private static array $adminOnly = [

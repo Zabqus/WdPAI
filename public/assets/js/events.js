@@ -148,21 +148,41 @@
         }
 
         emptyEl.hidden = true;
-        filtered.forEach(e => list.appendChild(buildCard(e)));
+        filtered.forEach(ev => {
+            const card  = buildCard(ev);
+            const panel = buildPanel(ev.id);
+            list.appendChild(card);
+            list.appendChild(panel);
+
+            // Bind tasks toggle — TaskPanel manages panel.hidden internally
+            const tasksBtn = card.querySelector('.ev-btn-tasks');
+            const badgeEl  = card.querySelector('.ev-tasks-badge');
+            tasksBtn.addEventListener('click', async () => {
+                await TaskPanel.toggle(ev.id, panel, badgeEl);
+                tasksBtn.classList.toggle('ev-btn-tasks--open', !panel.hidden);
+            });
+        });
+    }
+
+    function buildPanel(eventId) {
+        const panel = document.createElement('div');
+        panel.className = 'tk-panel';
+        panel.hidden    = true;
+        return panel;
     }
 
     function buildCard(ev) {
-        const meta     = TYPE_META[ev.type] ?? TYPE_META.other;
-        const startD   = new Date(ev.start_at);
-        const day      = startD.getDate();
-        const month    = startD.toLocaleDateString('pl-PL', { month: 'short' }).replace('.', '');
-        const year     = startD.getFullYear();
-        const timeStr  = buildTimeStr(ev);
-        const course   = courses.find(c => c.id === ev.course_id);
+        const meta        = TYPE_META[ev.type] ?? TYPE_META.other;
+        const startD      = new Date(ev.start_at);
+        const day         = startD.getDate();
+        const month       = startD.toLocaleDateString('pl-PL', { month: 'short' }).replace('.', '');
+        const year        = startD.getFullYear();
+        const timeStr     = buildTimeStr(ev);
+        const course      = courses.find(c => c.id === ev.course_id);
         const courseColor = course?.color ?? '#6c63ff';
 
         const card = document.createElement('article');
-        card.className = 'ev-card' + (ev.is_done ? ' is-done' : '');
+        card.className  = 'ev-card' + (ev.is_done ? ' is-done' : '');
         card.dataset.id = ev.id;
 
         card.innerHTML = `
@@ -184,9 +204,13 @@
                     <i class="fa-regular fa-clock" aria-hidden="true"></i>
                     ${esc(timeStr)}
                 </div>
-                ${ev.description
-                    ? `<p class="ev-card-desc">${esc(ev.description)}</p>`
-                    : ''}
+                ${ev.description ? `<p class="ev-card-desc">${esc(ev.description)}</p>` : ''}
+                <button class="ev-btn-tasks" title="Pokaż/ukryj zadania">
+                    <i class="fa-regular fa-list-check" aria-hidden="true"></i>
+                    Zadania
+                    <span class="ev-tasks-badge" hidden></span>
+                    <i class="fa-solid fa-chevron-down ev-tasks-chevron" aria-hidden="true"></i>
+                </button>
             </div>
             <div class="ev-card-actions">
                 <button class="ev-btn-toggle" title="${ev.is_done ? 'Oznacz jako nieukończone' : 'Oznacz jako ukończone'}" aria-pressed="${ev.is_done}">
