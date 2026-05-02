@@ -13,6 +13,7 @@ require_once 'src/controllers/EventController.php';
 require_once 'src/controllers/TaskController.php';
 require_once 'src/controllers/NoteController.php';
 require_once 'src/controllers/StudyPlanController.php';
+require_once 'src/controllers/StudyProgressController.php';
 require_once 'src/controllers/CsrfGuard.php';
 
 class Routing {
@@ -34,8 +35,10 @@ class Routing {
             'api/tasks'   => ['TaskController',      'list'],
             'notes'       => ['NoteController',      'index'],
             'api/notes'      => ['NoteController',      'list'],
-            'study-plan'     => ['StudyPlanController', 'index'],
-            'api/study-plan' => ['StudyPlanController', 'list'],
+            'study-plan'              => ['StudyPlanController',      'index'],
+            'api/study-plan'          => ['StudyPlanController',      'list'],
+            'api/study-progress'      => ['StudyProgressController',  'progress'],
+            'api/study-progress/plan' => ['StudyProgressController',  'plan'],
         ],
         'POST' => [
             'login'          => ['AuthController',  'login'],
@@ -75,6 +78,7 @@ class Routing {
         'notes/create', 'notes/update', 'notes/delete',
         'study-plan', 'api/study-plan',
         'study-plan/create', 'study-plan/delete',
+        'api/study-progress', 'api/study-progress/plan',
     ];
 
     private static array $adminOnly = [
