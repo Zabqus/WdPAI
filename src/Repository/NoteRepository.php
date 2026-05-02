@@ -53,20 +53,21 @@ class NoteRepository
 
     public function create(int $userId, string $title, ?string $content, ?int $eventId = null, ?int $courseId = null): Note
     {
-        $this->db->execute(
+        $row = $this->db->fetchOne(
             'INSERT INTO notes (user_id, event_id, course_id, title, content)
-             VALUES (:uid, :eid, :cid, :title, :content)',
+             VALUES (:uid, :eid, :cid, :title, :content)
+             RETURNING id',
             ['uid' => $userId, 'eid' => $eventId, 'cid' => $courseId,
              'title' => $title, 'content' => $content]
         );
-        return $this->findById((int) $this->db->lastInsertId());
+        return $this->findById((int) $row['id']);
     }
 
-    public function update(int $id, string $title, ?string $content): bool
+    public function update(int $id, string $title, ?string $content, ?int $eventId = null, ?int $courseId = null): bool
     {
         return $this->db->execute(
-            'UPDATE notes SET title = :title, content = :content WHERE id = :id',
-            ['title' => $title, 'content' => $content, 'id' => $id]
+            'UPDATE notes SET title = :title, content = :content, event_id = :eid, course_id = :cid WHERE id = :id',
+            ['title' => $title, 'content' => $content, 'eid' => $eventId, 'cid' => $courseId, 'id' => $id]
         ) > 0;
     }
 

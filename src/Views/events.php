@@ -27,6 +27,7 @@
             <a href="/calendar"  class="db-nav-link">Kalendarz</a>
             <a href="/courses"   class="db-nav-link">Przedmioty</a>
             <a href="/events"    class="db-nav-link active">Wydarzenia</a>
+            <a href="/notes"     class="db-nav-link">Notatki</a>
             <?php if (Session::get('user_role') === 'admin'): ?>
                 <a href="/admin" class="db-nav-link db-nav-link--admin">Admin</a>
             <?php endif; ?>
