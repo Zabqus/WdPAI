@@ -12,6 +12,7 @@ require_once 'src/controllers/CourseController.php';
 require_once 'src/controllers/EventController.php';
 require_once 'src/controllers/TaskController.php';
 require_once 'src/controllers/NoteController.php';
+require_once 'src/controllers/StudyPlanController.php';
 require_once 'src/controllers/CsrfGuard.php';
 
 class Routing {
@@ -32,7 +33,9 @@ class Routing {
             'api/events'  => ['EventController',     'list'],
             'api/tasks'   => ['TaskController',      'list'],
             'notes'       => ['NoteController',      'index'],
-            'api/notes'   => ['NoteController',      'list'],
+            'api/notes'      => ['NoteController',      'list'],
+            'study-plan'     => ['StudyPlanController', 'index'],
+            'api/study-plan' => ['StudyPlanController', 'list'],
         ],
         'POST' => [
             'login'          => ['AuthController',  'login'],
@@ -54,7 +57,9 @@ class Routing {
             'tasks/reorder'  => ['TaskController',   'reorder'],
             'notes/create'   => ['NoteController',   'create'],
             'notes/update'   => ['NoteController',   'update'],
-            'notes/delete'   => ['NoteController',   'delete'],
+            'notes/delete'        => ['NoteController',      'delete'],
+            'study-plan/create'   => ['StudyPlanController', 'create'],
+            'study-plan/delete'   => ['StudyPlanController', 'delete'],
         ],
     ];
 
@@ -68,6 +73,8 @@ class Routing {
         'tasks/create', 'tasks/toggle', 'tasks/update', 'tasks/delete', 'tasks/reorder',
         'notes', 'api/notes',
         'notes/create', 'notes/update', 'notes/delete',
+        'study-plan', 'api/study-plan',
+        'study-plan/create', 'study-plan/delete',
     ];
 
     private static array $adminOnly = [
