@@ -14,6 +14,7 @@ require_once 'src/controllers/TaskController.php';
 require_once 'src/controllers/NoteController.php';
 require_once 'src/controllers/StudyPlanController.php';
 require_once 'src/controllers/StudyProgressController.php';
+require_once 'src/controllers/ShareController.php';
 require_once 'src/controllers/CsrfGuard.php';
 
 class Routing {
@@ -39,6 +40,8 @@ class Routing {
             'api/study-plan'          => ['StudyPlanController',      'list'],
             'api/study-progress'      => ['StudyProgressController',  'progress'],
             'api/study-progress/plan' => ['StudyProgressController',  'plan'],
+            'api/shares/events'       => ['ShareController',          'listEvents'],
+            'api/shares/notes'        => ['ShareController',          'listNotes'],
         ],
         'POST' => [
             'login'          => ['AuthController',  'login'],
@@ -63,6 +66,10 @@ class Routing {
             'notes/delete'        => ['NoteController',      'delete'],
             'study-plan/create'   => ['StudyPlanController', 'create'],
             'study-plan/delete'   => ['StudyPlanController', 'delete'],
+            'shares/event/grant'  => ['ShareController',     'grantEvent'],
+            'shares/event/revoke' => ['ShareController',     'revokeEvent'],
+            'shares/note/grant'   => ['ShareController',     'grantNote'],
+            'shares/note/revoke'  => ['ShareController',     'revokeNote'],
         ],
     ];
 
@@ -79,6 +86,9 @@ class Routing {
         'study-plan', 'api/study-plan',
         'study-plan/create', 'study-plan/delete',
         'api/study-progress', 'api/study-progress/plan',
+        'api/shares/events', 'api/shares/notes',
+        'shares/event/grant', 'shares/event/revoke',
+        'shares/note/grant',  'shares/note/revoke',
     ];
 
     private static array $adminOnly = [
