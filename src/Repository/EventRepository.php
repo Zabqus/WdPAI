@@ -57,6 +57,22 @@ class EventRepository
     }
 
     /**
+     * Wiersze z widoku v_events_with_course dla danego użytkownika i miesiąca (UTC).
+     * @return array[]
+     */
+    public function findWithCourseByUserIdAndMonth(int $userId, int $year, int $month): array
+    {
+        return $this->db->fetchAll(
+            "SELECT * FROM v_events_with_course
+             WHERE user_id = :uid
+               AND EXTRACT(YEAR  FROM start_at AT TIME ZONE 'UTC') = :year
+               AND EXTRACT(MONTH FROM start_at AT TIME ZONE 'UTC') = :month
+             ORDER BY start_at",
+            ['uid' => $userId, 'year' => $year, 'month' => $month]
+        );
+    }
+
+    /**
      * Wiersze z widoku v_events_with_course dla danego kursu.
      * @return array[]
      */

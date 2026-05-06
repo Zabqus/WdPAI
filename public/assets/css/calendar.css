@@ -42,6 +42,32 @@
 /* =============================================
    CALENDAR HEADER
    ============================================= */
+
+/* Month title + prev/next navigation row */
+.cal-month-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cal-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: var(--db-text-muted, #576162);
+    text-decoration: none;
+    transition: background 150ms, color 150ms;
+    flex-shrink: 0;
+}
+
+.cal-nav-btn:hover {
+    background: var(--db-card, #e7eff0);
+    color: var(--db-teal, #1b6871);
+}
+
 .cal-header {
     display: flex;
     align-items: flex-end;
@@ -251,6 +277,29 @@
     background: var(--db-teal, #1b6871);
     color: #eafcff;
     border-radius: 4px;
+}
+
+/* Other event type */
+.cal-chip--other {
+    background: rgba(87, 97, 98, 0.1);
+    color: #576162;
+}
+
+/* Overflow indicator (+N więcej) */
+.cal-chip--more {
+    background: none;
+    color: var(--db-text-muted, #576162);
+    font-weight: 500;
+    font-size: 9px;
+    padding: 2px 4px;
+}
+
+/* Sidebar empty state */
+.cal-no-events {
+    font-size: 13px;
+    color: var(--db-text-muted, #576162);
+    text-align: center;
+    padding: 16px 0;
 }
 
 /* =============================================

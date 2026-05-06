@@ -7,32 +7,30 @@
     include __DIR__ . '/partials/head.php';
 
     /* ── Calendar math ────────────────────────────────── */
-    $year  = (int)date('Y');
-    $month = (int)date('n');
-    $today = (int)date('j');
+    $year  = $calYear;
+    $month = $calMonth;
+
+    $nowYear  = (int) date('Y');
+    $nowMonth = (int) date('n');
+    $today    = (int) date('j');
 
     $firstDayTs      = mktime(0, 0, 0, $month, 1, $year);
-    $daysInMonth     = (int)date('t', $firstDayTs);
-    $daysInPrevMonth = (int)date('t', mktime(0, 0, 0, $month - 1, 1, $year));
+    $daysInMonth     = (int) date('t', $firstDayTs);
+    $daysInPrevMonth = (int) date('t', mktime(0, 0, 0, $month - 1, 1, $year));
 
     /* ISO: 1=Mon … 7=Sun — how many prev-month padding cells */
-    $startDow  = (int)date('N', $firstDayTs); // 1–7
-    $prevCells = $startDow - 1;               // 0–6
+    $startDow  = (int) date('N', $firstDayTs);
+    $prevCells = $startDow - 1;
 
-    $totalUsed = $prevCells + $daysInMonth;
-    $nextCells = ($totalUsed % 7 === 0) ? 0 : 7 - ($totalUsed % 7);
+    $totalUsed  = $prevCells + $daysInMonth;
+    $nextCells  = ($totalUsed % 7 === 0) ? 0 : 7 - ($totalUsed % 7);
     $totalCells = $totalUsed + $nextCells;
 
-    /* ── Demo events (replace with controller data later) ─ */
-    $calendarEvents = $calendarEvents ?? [
-        2  => [['type' => 'study',  'label' => 'STUDY: BIO 201']],
-        4  => [['type' => 'exam',   'label' => 'EXAM: CALC II']],
-        10 => [['type' => 'colloq', 'label' => 'COLLOQUIUM']],
-        11 => [['type' => 'group',  'label' => 'GROUP SYNC']],
-        18 => [['type' => 'study',  'label' => 'STUDY: PHILO']],
-        20 => [['type' => 'exam',   'label' => 'EXAM: HISTORY']],
-        27 => [['type' => 'colloq', 'label' => 'SEMINAR']],
-    ];
+    /* ── Navigation ─────────────────────────────────────── */
+    $prevYear  = ($month === 1)  ? $year - 1 : $year;
+    $prevMonth = ($month === 1)  ? 12 : $month - 1;
+    $nextYear  = ($month === 12) ? $year + 1 : $year;
+    $nextMonth = ($month === 12) ? 1  : $month + 1;
 
     $monthNames = ['January','February','March','April','May','June',
                    'July','August','September','October','November','December'];
@@ -96,7 +94,21 @@
             <!-- Header -->
             <div class="cal-header">
                 <div class="cal-header-left">
-                    <h1 class="cal-month-title"><?= htmlspecialchars($monthLabel) ?></h1>
+                    <div class="cal-month-nav">
+                        <a href="/calendar?year=<?= $prevYear ?>&amp;month=<?= $prevMonth ?>"
+                           class="cal-nav-btn" title="Poprzedni miesiąc" aria-label="Poprzedni miesiąc">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <h1 class="cal-month-title"><?= htmlspecialchars($monthLabel) ?></h1>
+                        <a href="/calendar?year=<?= $nextYear ?>&amp;month=<?= $nextMonth ?>"
+                           class="cal-nav-btn" title="Następny miesiąc" aria-label="Następny miesiąc">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
                     <p class="cal-subtitle">Academic Schedule &bull; Fall Semester</p>
                 </div>
                 <div class="cal-view-toggle">
@@ -117,7 +129,10 @@
                 </div>
 
                 <!-- Day cells -->
-                <div class="cal-cells">
+                <div class="cal-cells"
+                     id="cal-cells"
+                     data-year="<?= $year ?>"
+                     data-month="<?= $month ?>">
                     <?php for ($i = 0; $i < $totalCells; $i++):
                         $cellDay = $i - $prevCells + 1;
 
@@ -132,26 +147,27 @@
                             $isOther = false;
                         }
 
-                        $isToday  = !$isOther && $displayDay === $today;
-                        $events   = (!$isOther) ? ($calendarEvents[$displayDay] ?? []) : [];
+                        $isToday = !$isOther
+                                && $displayDay === $today
+                                && $year === $nowYear
+                                && $month === $nowMonth;
 
                         $cellClass = 'cal-cell';
                         if ($isOther)  $cellClass .= ' cal-cell--other';
                         if ($isToday)  $cellClass .= ' cal-cell--today';
+
+                        $dateAttr = '';
+                        if (!$isOther) {
+                            $dateAttr = sprintf('data-date="%04d-%02d-%02d"', $year, $month, $displayDay);
+                        }
                     ?>
-                    <div class="<?= $cellClass ?>">
+                    <div class="<?= $cellClass ?>" <?= $dateAttr ?>>
                         <span class="cal-day-num"><?= $displayDay ?></span>
                         <?php if ($isToday): ?>
                             <span class="cal-today-dot" aria-hidden="true"></span>
                         <?php endif; ?>
-                        <?php if ($events): ?>
-                            <div class="cal-chip-list">
-                                <?php foreach ($events as $ev):
-                                    $chipClass = 'cal-chip cal-chip--' . htmlspecialchars($ev['type']);
-                                ?>
-                                <span class="<?= $chipClass ?>"><?= htmlspecialchars($ev['label']) ?></span>
-                                <?php endforeach; ?>
-                            </div>
+                        <?php if (!$isOther): ?>
+                            <div class="cal-chip-list"></div>
                         <?php endif; ?>
                     </div>
                     <?php endfor; ?>
@@ -167,12 +183,10 @@
             <!-- Focus Mode Card -->
             <div class="cal-focus-card">
                 <div class="cal-focus-blob" aria-hidden="true"></div>
-                <span class="cal-focus-eyebrow">Weekly Load</span>
+                <span class="cal-focus-eyebrow">Monthly Load</span>
                 <h2 class="cal-focus-title">Focus Mode</h2>
-                <p class="cal-focus-desc">
-                    3 Exams and 2 study sessions<br>
-                    scheduled this week. Clear<br>
-                    your desk.
+                <p class="cal-focus-desc" id="cal-focus-desc">
+                    Ładowanie wydarzeń&hellip;
                 </p>
                 <button class="cal-focus-btn">Quick View</button>
             </div>
@@ -186,47 +200,11 @@
                     </button>
                 </div>
 
-                <div class="cal-event-list">
+                <div id="cal-event-list" class="cal-event-list">
+                    <p class="cal-no-events">Ładowanie&hellip;</p>
+                </div>
 
-                    <div class="cal-event-item" style="border-left-color:#a83836;">
-                        <div class="cal-event-top">
-                            <span class="cal-event-type" style="color:#a83836;">Exam</span>
-                            <span class="cal-event-date">OCT 4</span>
-                        </div>
-                        <div class="cal-event-name">Calculus II Midterm</div>
-                        <div class="cal-event-meta">Room 402 &bull; 09:00 AM</div>
-                    </div>
-
-                    <div class="cal-event-item" style="border-left-color:#4b6367;">
-                        <div class="cal-event-top">
-                            <span class="cal-event-type" style="color:#476063;">Colloquium</span>
-                            <span class="cal-event-date">OCT 10</span>
-                        </div>
-                        <div class="cal-event-name">Digital Ethics Seminar</div>
-                        <div class="cal-event-meta">Virtual Hall &bull; 02:30 PM</div>
-                    </div>
-
-                    <div class="cal-event-item" style="border-left-color:#1b6871;">
-                        <div class="cal-event-top">
-                            <span class="cal-event-type" style="color:#1b6871;">Study Session</span>
-                            <span class="cal-event-date">OCT 11</span>
-                        </div>
-                        <div class="cal-event-name">Architecture Group Sync</div>
-                        <div class="cal-event-meta">Library Wing B &bull; 11:00 AM</div>
-                    </div>
-
-                    <div class="cal-event-item" style="border-left-color:#416280;">
-                        <div class="cal-event-top">
-                            <span class="cal-event-type" style="color:#2e506d;">Personal</span>
-                            <span class="cal-event-date">OCT 18</span>
-                        </div>
-                        <div class="cal-event-name">Philosophy Review</div>
-                        <div class="cal-event-meta">Home &bull; 07:00 PM</div>
-                    </div>
-
-                </div><!-- /cal-event-list -->
-
-                <a href="#" class="cal-view-all-btn">
+                <a href="/events" class="cal-view-all-btn">
                     View full list
                     <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
                         <path d="M1.5 7.5L7.5 1.5M7.5 1.5H2.5M7.5 1.5V6.5"
@@ -253,6 +231,6 @@
     <i class="fa-solid fa-plus"></i>
 </button>
 
-<script src="/public/assets/js/main.js" defer></script>
+<script src="/public/assets/js/calendar.js" defer></script>
 </body>
 </html>

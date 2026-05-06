@@ -25,11 +25,12 @@ class EventController extends AppController
         ]);
     }
 
-    // GET /api/events[?course_id=X]
+    // GET /api/events[?course_id=X][?month=YYYY-MM]
     public function list(): void
     {
         $userId   = (int) Session::get('user_id');
         $courseId = isset($_GET['course_id']) ? (int) $_GET['course_id'] : null;
+        $month    = $_GET['month'] ?? null;
 
         if ($courseId !== null) {
             $course = $this->courses->findById($courseId);
@@ -37,6 +38,12 @@ class EventController extends AppController
                 $this->json(['error' => 'Nie znaleziono kursu.'], 404);
             }
             $rows = $this->events->findWithCourseByCourseId($courseId);
+        } elseif ($month !== null) {
+            if (!preg_match('/^\d{4}-\d{2}$/', $month)) {
+                $this->json(['error' => 'Nieprawidłowy format miesiąca (YYYY-MM).'], 422);
+            }
+            [$y, $m] = explode('-', $month);
+            $rows = $this->events->findWithCourseByUserIdAndMonth($userId, (int) $y, (int) $m);
         } else {
             $rows = $this->events->findWithCourseByUserId($userId);
         }
