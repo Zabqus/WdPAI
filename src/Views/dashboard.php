@@ -25,9 +25,11 @@
 
         <!-- Center: Nav links -->
         <nav class="db-nav-links">
-            <a href="/dashboard" class="db-nav-link active">Dashboard</a>
-            <a href="/calendar"  class="db-nav-link">Calendar</a>
-            <a href="/groups"    class="db-nav-link">Study Groups</a>
+            <a href="/dashboard"  class="db-nav-link active">Dashboard</a>
+            <a href="/calendar"   class="db-nav-link">Kalendarz</a>
+            <a href="/events"     class="db-nav-link">Wydarzenia</a>
+            <a href="/study-plan" class="db-nav-link">Plan Nauki</a>
+            <a href="/notes"      class="db-nav-link">Notatki</a>
             <?php if (Session::get('user_role') === 'admin'): ?>
                 <a href="/admin" class="db-nav-link db-nav-link--admin">Admin</a>
             <?php endif; ?>

@@ -1,0 +1,433 @@
+/* =============================================
+   SYNCU — study-plan.css  (sp- prefix)
+   ============================================= */
+
+/* ---- Canvas ---- */
+.sp-canvas {
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 112px 44px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* ---- Page Header ---- */
+.sp-page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sp-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--db-text);
+    letter-spacing: -1.5px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+
+.sp-subtitle {
+    font-size: 15px;
+    color: var(--db-text-muted);
+    font-weight: 500;
+}
+
+/* ---- Date Navigation ---- */
+.sp-date-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--db-card-light, #eef5f6);
+    border-radius: 16px;
+    padding: 14px 20px;
+}
+
+.sp-nav-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: none;
+    background: white;
+    color: var(--db-text-muted);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: background 150ms, color 150ms;
+    flex-shrink: 0;
+}
+
+.sp-nav-btn:hover {
+    background: var(--db-teal);
+    color: white;
+}
+
+.sp-date-display {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--db-text);
+    letter-spacing: -0.3px;
+    text-transform: capitalize;
+}
+
+.sp-today-btn {
+    padding: 8px 18px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--db-teal);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.sp-today-btn:hover { background: var(--db-teal-dark); }
+
+/* ---- Event Group ---- */
+.sp-group {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--db-border-faint, rgba(169,180,181,0.3));
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.sp-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 20px 14px;
+    border-left: 5px solid var(--db-teal);
+}
+
+.sp-group-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sp-group-title {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--db-text);
+    letter-spacing: -0.3px;
+    margin-bottom: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sp-group-meta {
+    font-size: 12.5px;
+    color: var(--db-text-muted);
+    font-weight: 500;
+}
+
+.sp-group-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--db-teal);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ---- Progress Bar ---- */
+.sp-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 14px;
+}
+
+.sp-progress-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--db-card, #e7eff0);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.sp-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--db-teal), #27ae60);
+    border-radius: 99px;
+    transition: width 300ms ease;
+}
+
+.sp-pct-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--db-teal);
+    min-width: 30px;
+    text-align: right;
+}
+
+/* ---- Task List ---- */
+.sp-task-list {
+    list-style: none;
+    border-top: 1px solid rgba(169,180,181,0.15);
+}
+
+.sp-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(169,180,181,0.1);
+    transition: background 120ms;
+}
+
+.sp-item:last-child { border-bottom: none; }
+
+.sp-item:hover { background: var(--db-card-light, #eef5f6); }
+
+.sp-item--done { opacity: 0.6; }
+
+/* Checkbox */
+.sp-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 2px solid var(--db-gray, #a9b4b5);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 11px;
+    color: white;
+    transition: background 150ms, border-color 150ms;
+}
+
+.sp-item--done .sp-check {
+    background: #27ae60;
+    border-color: #27ae60;
+}
+
+.sp-check:hover:not(.sp-item--done .sp-check) {
+    border-color: var(--db-teal);
+}
+
+/* Task title */
+.sp-item-title {
+    flex: 1;
+    font-size: 14px;
+    color: var(--db-text);
+}
+
+.sp-item--done .sp-item-title {
+    text-decoration: line-through;
+    color: var(--db-text-muted);
+}
+
+/* Remove button */
+.sp-remove {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--db-text-faint, rgba(87,97,98,0.6));
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: background 150ms, color 150ms, opacity 150ms;
+    flex-shrink: 0;
+}
+
+.sp-item:hover .sp-remove { opacity: 1; }
+
+.sp-remove:hover {
+    background: rgba(168,56,54,0.1);
+    color: #a83836;
+}
+
+/* ---- Empty State ---- */
+.sp-empty {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--db-text-muted);
+}
+
+.sp-empty-icon {
+    font-size: 48px;
+    color: var(--db-gray, #a9b4b5);
+    margin-bottom: 18px;
+    display: block;
+}
+
+.sp-empty h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--db-text);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+}
+
+.sp-empty p {
+    font-size: 15px;
+}
+
+/* ---- Add Panel ---- */
+.sp-add-panel {
+    background: var(--db-card-light, #eef5f6);
+    border: 1.5px solid var(--db-card, #e7eff0);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sp-add-panel-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--db-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sp-add-panel-title i {
+    color: var(--db-teal);
+}
+
+.sp-add-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.sp-select {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--db-card, #e7eff0);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: var(--font, 'Inter', sans-serif);
+    color: var(--db-text);
+    background: white;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 150ms;
+}
+
+.sp-select:focus { border-color: var(--db-teal); }
+
+.sp-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.sp-opt-done { opacity: 0.5; }
+
+.sp-add-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.sp-btn-cancel {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1.5px solid var(--db-card, #e7eff0);
+    background: white;
+    color: var(--db-text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 150ms;
+}
+
+.sp-btn-cancel:hover { background: var(--db-card, #e7eff0); }
+
+.sp-btn-save {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background: var(--db-teal);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 150ms;
+}
+
+.sp-btn-save:hover    { background: var(--db-teal-dark); }
+.sp-btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ---- Open Button ---- */
+.sp-btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--db-teal);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background 150ms, box-shadow 150ms;
+    align-self: flex-start;
+}
+
+.sp-btn-new:hover {
+    background: var(--db-teal-dark);
+    box-shadow: 0 4px 12px rgba(27, 104, 113, 0.25);
+}
+
+/* ---- Toast ---- */
+.sp-toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 500;
+    padding: 13px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    background: var(--db-teal);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    transform: translateY(16px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease, transform 220ms ease;
+    max-width: 320px;
+}
+
+.sp-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.sp-toast.sp-toast--error { background: #a83836; }
+
+/* ---- Responsive ---- */
+@media (max-width: 680px) {
+    .sp-canvas  { padding: 96px 16px 64px; }
+    .sp-title   { font-size: 28px; }
+    .sp-date-display { font-size: 13px; }
+    .sp-add-row { flex-direction: column; }
+    .sp-select  { min-width: 0; }
+    .sp-toast   { bottom: 16px; right: 16px; left: 16px; max-width: none; }
+}
