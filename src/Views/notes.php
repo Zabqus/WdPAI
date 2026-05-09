@@ -45,6 +45,8 @@
     </div>
 </header>
 
+<?php include __DIR__ . '/partials/sidebar.php'; ?>
+
 <!-- ==================== MAIN CANVAS ==================== -->
 <main class="nt-canvas">
 
