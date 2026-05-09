@@ -65,7 +65,7 @@
         ?>
         <h1 class="db-greeting"><?= $greet ?>, <?= htmlspecialchars($userName ?? 'Alex') ?>.</h1>
         <p class="db-subtitle">
-            You have <strong><?= (int)($stats['upcoming'] ?? 4) ?> sessions</strong> scheduled for today.
+            You have <strong><?= $todayCount ?> event<?= $todayCount !== 1 ? 's' : '' ?></strong> scheduled for today.
         </p>
     </div>
 
@@ -80,43 +80,32 @@
             </div>
             <div class="db-task-list">
 
+                <?php if (empty($todayPlan)): ?>
+                <p style="font-size:14px;color:var(--db-text-muted);padding:4px 0;">No tasks planned for today.</p>
+                <?php else: ?>
+                <?php foreach ($todayPlan as $ev):
+                    $startTime = date('g:i A', strtotime($ev['start_at']));
+                    $daysUntil = (int) $ev['days_until'];
+                    if ($daysUntil > 0)       $dueLabel = 'In ' . $daysUntil . ' day' . ($daysUntil > 1 ? 's' : '');
+                    elseif ($daysUntil === 0)  $dueLabel = 'Today';
+                    else                       $dueLabel = abs($daysUntil) . 'd ago';
+                ?>
                 <div class="db-task-item">
                     <div class="db-task-left">
-                        <div class="db-task-bar" style="background:#1b6871;"></div>
+                        <div class="db-task-bar" style="background:<?= htmlspecialchars($ev['course_color']) ?>;"></div>
                         <div class="db-task-info">
-                            <div class="db-task-name">Advanced Quantum Mechanics</div>
-                            <div class="db-task-meta">Lecture Hall B &bull; 10:00 AM &ndash; 11:30 AM</div>
+                            <div class="db-task-name"><?= htmlspecialchars($ev['event_title']) ?></div>
+                            <div class="db-task-meta">
+                                <?= htmlspecialchars($ev['course_name']) ?> &bull;
+                                <?= $startTime ?> &bull;
+                                <?= $ev['planned_done'] ?>/<?= $ev['planned_total'] ?> tasks done
+                                (<?= $dueLabel ?>)
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="db-task-item">
-                    <div class="db-task-left">
-                        <div class="db-task-bar" style="background:#416280;"></div>
-                        <div class="db-task-info">
-                            <div class="db-task-name">Group Study: Ethics in AI</div>
-                            <div class="db-task-meta">Library Room 402 &bull; 1:00 PM &ndash; 2:30 PM</div>
-                        </div>
-                    </div>
-                    <div class="db-member-stack">
-                        <div class="db-member-avatar" style="background:#7c9eb5;">AB</div>
-                        <div class="db-member-avatar" style="background:#5a8293;">CD</div>
-                        <div class="db-member-avatar db-member-more">+3</div>
-                    </div>
-                </div>
-
-                <div class="db-task-item">
-                    <div class="db-task-left">
-                        <div class="db-task-bar" style="background:#3f575b;"></div>
-                        <div class="db-task-info">
-                            <div class="db-task-name">Submit Research Proposal</div>
-                            <div class="db-task-meta">Canvas Upload &bull; Due by 5:00 PM</div>
-                        </div>
-                    </div>
-                    <button class="db-task-menu" aria-label="Options">
-                        <span></span><span></span><span></span>
-                    </button>
-                </div>
+                <?php endforeach; ?>
+                <?php endif; ?>
 
             </div>
         </section>
@@ -126,24 +115,29 @@
             <h2 class="db-section-title">Deadlines</h2>
 
             <div class="db-timeline">
+                <?php if (empty($upcomingEvents)): ?>
+                <p style="font-size:14px;color:var(--db-text-muted);">No upcoming events.</p>
+                <?php else: ?>
+                <?php foreach ($upcomingEvents as $ev):
+                    $d     = new DateTime(substr($ev['start_at'], 0, 10));
+                    $today = new DateTime('today');
+                    $diff  = (int) $today->diff($d)->days;
+                    if ($diff === 0)     $when = 'Today';
+                    elseif ($diff === 1) $when = 'Tomorrow';
+                    elseif ($diff <= 7)  $when = "In $diff days";
+                    else                 $when = $d->format('M d');
+
+                    $dot = $ev['type'] === 'exam'       ? '#a83836' :
+                          ($ev['type'] === 'colloquium' ? '#1b6871' : '#a9b4b5');
+                ?>
                 <div class="db-timeline-item">
-                    <div class="db-timeline-dot" style="background:#a83836;"></div>
-                    <span class="db-timeline-when">In 2 Days</span>
-                    <div class="db-timeline-title">Midterm: Calculus III</div>
-                    <div class="db-timeline-desc">Preparation level: 65%</div>
+                    <div class="db-timeline-dot" style="background:<?= htmlspecialchars($dot) ?>;"></div>
+                    <span class="db-timeline-when"><?= htmlspecialchars($when) ?></span>
+                    <div class="db-timeline-title"><?= htmlspecialchars($ev['event_title']) ?></div>
+                    <div class="db-timeline-desc"><?= htmlspecialchars($ev['course_name']) ?></div>
                 </div>
-                <div class="db-timeline-item">
-                    <div class="db-timeline-dot" style="background:#1b6871;"></div>
-                    <span class="db-timeline-when">Oct 29</span>
-                    <div class="db-timeline-title">Colloquium: Neural Nets</div>
-                    <div class="db-timeline-desc">Presenting: Research Phase B</div>
-                </div>
-                <div class="db-timeline-item">
-                    <div class="db-timeline-dot" style="background:#a9b4b5;"></div>
-                    <span class="db-timeline-when">Nov 04</span>
-                    <div class="db-timeline-title">Final Thesis Draft</div>
-                    <div class="db-timeline-desc">Submit to Advisor</div>
-                </div>
+                <?php endforeach; ?>
+                <?php endif; ?>
             </div>
 
             <a href="/calendar" class="db-btn-teal">

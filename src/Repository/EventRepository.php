@@ -84,6 +84,30 @@ class EventRepository
         );
     }
 
+    /** @return array[] — upcoming (not done, start_at >= NOW), max 4 rows */
+    public function findUpcomingByUserId(int $userId): array
+    {
+        return $this->db->fetchAll(
+            "SELECT * FROM v_events_with_course
+             WHERE user_id = :uid AND is_done = FALSE AND start_at >= NOW()
+             ORDER BY start_at ASC
+             LIMIT 4",
+            ['uid' => $userId]
+        );
+    }
+
+    public function countTodayByUserId(int $userId): int
+    {
+        $row = $this->db->fetchOne(
+            "SELECT COUNT(*)::int AS cnt
+             FROM v_events_with_course
+             WHERE user_id = :uid
+               AND DATE(start_at AT TIME ZONE 'UTC') = CURRENT_DATE",
+            ['uid' => $userId]
+        );
+        return $row ? (int) $row['cnt'] : 0;
+    }
+
     /** @return array|null */
     public function findWithCourseById(int $eventId): ?array
     {
