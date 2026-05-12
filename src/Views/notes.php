@@ -34,6 +34,14 @@
         </nav>
 
         <div class="db-navbar-right">
+            <div class="db-nav-icons">
+                <button class="db-icon-btn" title="Powiadomienia">
+                    <i class="fa-regular fa-bell"></i>
+                </button>
+                <button class="db-icon-btn" title="Ustawienia">
+                    <i class="fa-regular fa-gear"></i>
+                </button>
+            </div>
             <div class="db-identity">
                 <div class="db-user-avatar">
                     <?= strtoupper(substr($userName ?? 'AL', 0, 2)) ?>

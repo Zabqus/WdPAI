@@ -44,10 +44,10 @@
     <div class="db-navbar-inner">
 
         <!-- Left: Search -->
-        <div class="db-search-wrap cal-search-wrap">
-            <svg class="db-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <rect x="1" y="2" width="9" height="11" rx="1" stroke="#576162" stroke-opacity="0.6" stroke-width="1.4"/>
-                <path d="M4 5.5h5M4 7.5h5M4 9.5h3" stroke="#576162" stroke-opacity="0.6" stroke-width="1.4" stroke-linecap="round"/>
+        <div class="db-search-wrap">
+            <svg class="db-search-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                <path d="M10 10L7.45 7.45M8.5 4.75C8.5 6.82 6.82 8.5 4.75 8.5C2.68 8.5 1 6.82 1 4.75C1 2.68 2.68 1 4.75 1C6.82 1 8.5 2.68 8.5 4.75Z"
+                      stroke="#576162" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             <label for="cal-search" class="sr-only">Search events</label>
             <input type="text" id="cal-search" class="db-search-input" placeholder="Search events...">
@@ -65,7 +65,6 @@
             <?php endif; ?>
         </nav>
 
-        <!-- Right: icons + identity -->
         <div class="db-navbar-right">
             <div class="db-nav-icons">
                 <button class="db-icon-btn" title="Powiadomienia">
