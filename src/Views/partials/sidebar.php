@@ -36,6 +36,16 @@
                 <span class="psb-soon-badge">wkrótce</span>
             </a>
         </nav>
+
+        <span class="psb-section-label" style="margin-top:12px;">Nauka</span>
+        <nav class="psb-nav">
+            <a href="/courses" class="psb-nav-item">
+                <span class="psb-nav-icon">
+                    <i class="fa-regular fa-book-open" aria-hidden="true"></i>
+                </span>
+                Moje przedmioty
+            </a>
+        </nav>
     </div>
 
     <!-- Footer -->

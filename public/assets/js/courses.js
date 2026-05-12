@@ -6,9 +6,9 @@
 (function () {
 
     const COLORS = [
-        '#6c63ff', '#1b6871', '#416280', '#27ae60',
-        '#e67e22', '#e74c3c', '#8e44ad', '#2980b9',
-        '#16a085', '#3f575b',
+        '#1b6871', '#2c8f9a', '#416280', '#3f575b',
+        '#27ae60', '#16a085', '#2980b9', '#1a5276',
+        '#8e44ad', '#a83836', '#e67e22', '#d35400',
     ];
 
     let courses     = [];
@@ -72,34 +72,34 @@
 
     function buildCard(c) {
         const card = document.createElement('article');
-        card.className   = 'cr-card';
+        card.className    = 'cr-card';
         card.dataset.id   = c.id;
         card.dataset.name = c.name.toLowerCase();
 
+        const initial = c.name.trim().charAt(0).toUpperCase();
         const date    = new Date(c.created_at);
         const dateStr = date.toLocaleDateString('pl-PL', { year: 'numeric', month: 'short', day: 'numeric' });
 
         card.innerHTML = `
-            <div class="cr-card-stripe" style="background:${esc(c.color)};"></div>
-            <div class="cr-card-body">
-                <div class="cr-card-top">
-                    <div class="cr-card-dot" style="background:${esc(c.color)};"></div>
-                    <h3 class="cr-card-name">${esc(c.name)}</h3>
+            <div class="cr-card-header" style="background:${esc(c.color)};">
+                <span class="cr-card-initial">${initial}</span>
+                <div class="cr-card-header-actions">
+                    <button class="cr-btn-edit" title="Edytuj" aria-label="Edytuj ${esc(c.name)}">
+                        <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                    </button>
+                    <button class="cr-btn-delete" title="Usuń" aria-label="Usuń ${esc(c.name)}">
+                        <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                    </button>
                 </div>
+            </div>
+            <div class="cr-card-body">
+                <h3 class="cr-card-name">${esc(c.name)}</h3>
                 <p class="cr-card-desc">${c.description ? esc(c.description) : '<em>Brak opisu</em>'}</p>
                 <div class="cr-card-footer">
                     <span class="cr-card-date">
                         <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i>
                         ${dateStr}
                     </span>
-                    <div class="cr-card-actions">
-                        <button class="cr-btn-edit" title="Edytuj" aria-label="Edytuj ${esc(c.name)}">
-                            <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
-                        </button>
-                        <button class="cr-btn-delete" title="Usuń" aria-label="Usuń ${esc(c.name)}">
-                            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
-                        </button>
-                    </div>
                 </div>
             </div>
         `;
