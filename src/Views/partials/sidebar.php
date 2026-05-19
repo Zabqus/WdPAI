@@ -28,12 +28,11 @@
     <div class="psb-body">
         <span class="psb-section-label">Konto</span>
         <nav class="psb-nav">
-            <a href="#" class="psb-nav-item psb-nav-item--soon">
+            <a href="/profile" class="psb-nav-item">
                 <span class="psb-nav-icon">
                     <i class="fa-regular fa-user" aria-hidden="true"></i>
                 </span>
                 Profil
-                <span class="psb-soon-badge">wkrótce</span>
             </a>
         </nav>
 
