@@ -531,6 +531,186 @@
 }
 
 /* =============================================
+   TIME VIEW (Week / Day)
+   ============================================= */
+#cal-time-view {
+    background: var(--db-card, #e7eff0);
+    border: 1px solid rgba(169, 180, 181, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 24px 48px -12px rgba(42, 52, 54, 0.04);
+    overflow: hidden;
+}
+
+/* ---- Header ---- */
+.cal-tv-head {
+    display: grid;
+    grid-template-columns: 56px repeat(var(--cols), 1fr);
+    background: rgba(225, 234, 235, 0.5);
+    border-bottom: 1px solid rgba(169, 180, 181, 0.12);
+}
+
+.cal-tv-spacer {
+    border-right: 1px solid rgba(169, 180, 181, 0.12);
+}
+
+.cal-tv-head-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px;
+    border-left: 1px solid rgba(169, 180, 181, 0.1);
+    cursor: default;
+}
+
+.cal-tv-day-name {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--db-text-muted, #576162);
+}
+
+.cal-tv-head-day--today .cal-tv-day-name {
+    color: var(--db-teal, #1b6871);
+}
+
+.cal-tv-day-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--db-text, #2a3436);
+    line-height: 1;
+}
+
+.cal-tv-day-num--today {
+    background: var(--db-teal, #1b6871);
+    color: #eafcff;
+}
+
+/* ---- Scrollable body ---- */
+.cal-tv-body {
+    display: grid;
+    grid-template-columns: 56px repeat(var(--cols), 1fr);
+    max-height: 560px;
+    overflow-y: auto;
+    background: var(--db-card, #e7eff0);
+    gap: 1px;
+}
+
+/* Hide scrollbar but keep functionality */
+.cal-tv-body::-webkit-scrollbar { width: 4px; }
+.cal-tv-body::-webkit-scrollbar-track { background: transparent; }
+.cal-tv-body::-webkit-scrollbar-thumb { background: rgba(169,180,181,0.4); border-radius: 4px; }
+
+/* ---- Time label column ---- */
+.cal-tv-times {
+    background: white;
+}
+
+.cal-tv-ts {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.cal-tv-tl {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: rgba(87, 97, 98, 0.45);
+    transform: translateY(-6px);
+    white-space: nowrap;
+}
+
+/* ---- Day columns ---- */
+.cal-tv-col {
+    background: white;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.cal-tv-col--today {
+    background: rgba(169, 238, 248, 0.06);
+}
+
+.cal-tv-hr {
+    border-bottom: 1px solid rgba(169, 180, 181, 0.1);
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+.cal-tv-hr:last-child {
+    border-bottom: none;
+}
+
+/* ---- Current time indicator ---- */
+.cal-tv-nowline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--db-teal, #1b6871);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.cal-tv-nowline::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--db-teal, #1b6871);
+}
+
+/* ---- Event blocks ---- */
+.cal-tv-event {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    border-left: 3px solid;
+    border-radius: 6px;
+    padding: 4px 7px;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 5;
+    box-sizing: border-box;
+    transition: filter 120ms, opacity 150ms;
+}
+
+.cal-tv-event:hover {
+    filter: brightness(0.93);
+}
+
+.cal-tv-ev-title {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cal-tv-ev-time {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.65;
+    margin-top: 1px;
+}
+
+/* =============================================
    RESPONSIVE
    ============================================= */
 @media (max-width: 1280px) {

@@ -99,29 +99,30 @@
                 <div class="cal-header-left">
                     <div class="cal-month-nav">
                         <a href="/calendar?year=<?= $prevYear ?>&amp;month=<?= $prevMonth ?>"
-                           class="cal-nav-btn" title="Poprzedni miesiąc" aria-label="Poprzedni miesiąc">
+                           id="cal-nav-prev" class="cal-nav-btn" title="Poprzedni miesiąc" aria-label="Poprzedni miesiąc">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
-                        <h1 class="cal-month-title"><?= htmlspecialchars($monthLabel) ?></h1>
+                        <h1 class="cal-month-title" id="cal-nav-title"><?= htmlspecialchars($monthLabel) ?></h1>
                         <a href="/calendar?year=<?= $nextYear ?>&amp;month=<?= $nextMonth ?>"
-                           class="cal-nav-btn" title="Następny miesiąc" aria-label="Następny miesiąc">
+                           id="cal-nav-next" class="cal-nav-btn" title="Następny miesiąc" aria-label="Następny miesiąc">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                 <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </a>
                     </div>
-                    <p class="cal-subtitle">Academic Schedule &bull; Fall Semester</p>
+                    <p class="cal-subtitle" id="cal-nav-subtitle">Academic Schedule &bull; Fall Semester</p>
                 </div>
                 <div class="cal-view-toggle">
-                    <button class="cal-toggle-btn active">Month</button>
-                    <button class="cal-toggle-btn">Week</button>
-                    <button class="cal-toggle-btn">Day</button>
+                    <button class="cal-toggle-btn active" id="cal-toggle-month">Month</button>
+                    <button class="cal-toggle-btn" id="cal-toggle-week">Week</button>
+                    <button class="cal-toggle-btn" id="cal-toggle-day">Day</button>
                 </div>
             </div>
 
             <!-- Calendar Grid -->
+            <div id="cal-month-view">
             <div class="cal-grid-wrap">
 
                 <!-- Weekday headers -->
@@ -177,6 +178,9 @@
                 </div><!-- /cal-cells -->
 
             </div><!-- /cal-grid-wrap -->
+            </div><!-- /cal-month-view -->
+
+            <div id="cal-time-view" hidden></div>
 
         </div><!-- /cal-main -->
 
