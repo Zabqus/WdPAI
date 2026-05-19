@@ -26,25 +26,6 @@
                 <p class="auth-subtitle">Step back into your curated study space.</p>
             </div>
 
-            <!-- Social buttons -->
-            <div class="auth-social">
-                <button type="button" class="auth-social-btn">
-                    <img src="https://www.figma.com/api/mcp/asset/4a613017-2979-4dec-b842-f5f8b3ff2690" alt="Google" class="auth-social-icon" width="20" height="20">
-                    <span>Continue with Google</span>
-                </button>
-                <button type="button" class="auth-social-btn">
-                    <i class="fa-solid fa-building-columns" style="font-size:16px;color:#476063;"></i>
-                    <span>University ID</span>
-                </button>
-            </div>
-
-            <!-- Divider -->
-            <div class="auth-divider">
-                <span class="auth-divider-line"></span>
-                <span class="auth-divider-text">or access via mail</span>
-                <span class="auth-divider-line"></span>
-            </div>
-
             <!-- Form -->
             <?php if (!empty($error)): ?>
                 <div class="auth-alert">

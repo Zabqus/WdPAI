@@ -349,9 +349,61 @@
 }
 
 /* =============================================
+   REGISTER EXTRAS
+   ============================================= */
+
+/* Two-column field row (first + last name) */
+.auth-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Wrapper for input + eye toggle */
+.auth-input-wrap {
+    position: relative;
+}
+
+.auth-input-wrap .auth-input {
+    padding-right: 44px;
+}
+
+.auth-eye-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--auth-muted);
+    font-size: 14px;
+    line-height: 1;
+    transition: color 150ms;
+}
+
+.auth-eye-btn:hover {
+    color: var(--auth-teal);
+}
+
+/* Hint text below a field */
+.auth-hint {
+    font-size: 11px;
+    color: rgba(87, 97, 98, 0.6);
+    font-weight: 400;
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+/* =============================================
    RESPONSIVE
    ============================================= */
 @media (max-width: 480px) {
+    .auth-row-2col {
+        grid-template-columns: 1fr;
+    }
+
     .auth-card {
         padding: 32px 24px;
         border-radius: 16px;
