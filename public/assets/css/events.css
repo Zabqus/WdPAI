@@ -27,12 +27,14 @@
     letter-spacing: -1.5px;
     line-height: 1.2;
     margin-bottom: 6px;
+    text-wrap: balance;
 }
 
 .ev-subtitle {
     font-size: 15px;
     color: var(--db-text-muted);
     font-weight: 500;
+    text-wrap: pretty;
 }
 
 .ev-btn-new {
@@ -48,7 +50,7 @@
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    transition: background 150ms, box-shadow 150ms;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -56,6 +58,10 @@
 .ev-btn-new:hover {
     background: var(--db-teal-dark);
     box-shadow: 0 4px 12px rgba(27, 104, 113, 0.25);
+}
+
+.ev-btn-new:active {
+    transform: scale(0.96);
 }
 
 /* ---- Filter Bar ---- */
@@ -174,8 +180,23 @@
     overflow: hidden;
     border: 1px solid var(--db-border-faint, rgba(169,180,181,0.3));
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    transition: box-shadow 180ms, transform 180ms;
+    transition: box-shadow 180ms cubic-bezier(0.23, 1, 0.32, 1), transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+    animation: evFadeInUp 360ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
+
+@keyframes evFadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.ev-list .ev-card:nth-child(1)  { animation-delay: 0ms; }
+.ev-list .ev-card:nth-child(2)  { animation-delay: 50ms; }
+.ev-list .ev-card:nth-child(3)  { animation-delay: 100ms; }
+.ev-list .ev-card:nth-child(4)  { animation-delay: 150ms; }
+.ev-list .ev-card:nth-child(5)  { animation-delay: 200ms; }
+.ev-list .ev-card:nth-child(6)  { animation-delay: 250ms; }
+.ev-list .ev-card:nth-child(n+7){ animation-delay: 300ms; }
 
 .ev-card:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.09);
@@ -210,6 +231,7 @@
     color: var(--db-text);
     line-height: 1;
     letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
 }
 
 .ev-card-month {
@@ -418,7 +440,7 @@
 
 .ev-tasks-chevron {
     font-size: 10px;
-    transition: transform 200ms ease;
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .ev-btn-tasks--open .ev-tasks-chevron {
@@ -729,7 +751,7 @@
     padding: 20px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 200ms ease;
+    transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .ev-modal-overlay.open {
@@ -745,12 +767,14 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-    transform: translateY(12px) scale(0.98);
-    transition: transform 200ms ease;
+    transform: translateY(8px) scale(0.97);
+    opacity: 0;
+    transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .ev-modal-overlay.open .ev-modal {
     transform: translateY(0) scale(1);
+    opacity: 1;
 }
 
 .ev-modal-header {
@@ -928,12 +952,16 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 150ms, box-shadow 150ms;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .ev-btn-save:hover {
     background: var(--db-teal-dark);
     box-shadow: 0 4px 12px rgba(27, 104, 113, 0.25);
+}
+
+.ev-btn-save:active {
+    transform: scale(0.96);
 }
 
 .ev-btn-save:disabled {
@@ -954,10 +982,10 @@
     color: #fff;
     background: var(--db-teal);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(16px);
+    transform: translateY(8px);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 220ms ease, transform 220ms ease;
+    transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1), transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
     max-width: 320px;
 }
 

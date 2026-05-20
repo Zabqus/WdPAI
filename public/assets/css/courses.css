@@ -27,12 +27,14 @@
     letter-spacing: -1.5px;
     line-height: 1.2;
     margin-bottom: 6px;
+    text-wrap: balance;
 }
 
 .cr-subtitle {
     font-size: 15px;
     color: var(--db-text-muted);
     font-weight: 500;
+    text-wrap: pretty;
 }
 
 .cr-btn-new {
@@ -48,7 +50,7 @@
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    transition: background 150ms, box-shadow 150ms;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -56,6 +58,10 @@
 .cr-btn-new:hover {
     background: var(--db-teal-dark);
     box-shadow: 0 4px 12px rgba(27, 104, 113, 0.25);
+}
+
+.cr-btn-new:active {
+    transform: scale(0.96);
 }
 
 /* ---- Cards Grid ---- */
@@ -73,9 +79,24 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(169,180,181,0.2);
     display: flex;
     flex-direction: column;
-    transition: box-shadow 200ms, transform 200ms;
+    transition: box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
     cursor: default;
+    opacity: 0;
+    animation: crFadeInUp 380ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
+
+@keyframes crFadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.cr-grid .cr-card:nth-child(1)  { animation-delay: 0ms; }
+.cr-grid .cr-card:nth-child(2)  { animation-delay: 50ms; }
+.cr-grid .cr-card:nth-child(3)  { animation-delay: 100ms; }
+.cr-grid .cr-card:nth-child(4)  { animation-delay: 150ms; }
+.cr-grid .cr-card:nth-child(5)  { animation-delay: 200ms; }
+.cr-grid .cr-card:nth-child(6)  { animation-delay: 250ms; }
+.cr-grid .cr-card:nth-child(n+7){ animation-delay: 300ms; }
 
 .cr-card:hover {
     box-shadow: 0 8px 28px rgba(0,0,0,0.11), 0 0 0 1px rgba(169,180,181,0.15);
@@ -259,7 +280,7 @@
     padding: 20px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 200ms ease;
+    transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .cr-modal-overlay.open {
@@ -273,12 +294,14 @@
     width: 100%;
     max-width: 480px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
-    transform: translateY(12px) scale(0.98);
-    transition: transform 200ms ease;
+    transform: translateY(8px) scale(0.97);
+    opacity: 0;
+    transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .cr-modal-overlay.open .cr-modal {
     transform: translateY(0) scale(1);
+    opacity: 1;
 }
 
 .cr-modal-header {
@@ -436,12 +459,16 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 150ms, box-shadow 150ms;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .cr-btn-save:hover {
     background: var(--db-teal-dark);
     box-shadow: 0 4px 12px rgba(27, 104, 113, 0.25);
+}
+
+.cr-btn-save:active {
+    transform: scale(0.96);
 }
 
 .cr-btn-save:disabled {
@@ -462,10 +489,10 @@
     color: #fff;
     background: var(--db-teal);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(16px);
+    transform: translateY(8px);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 220ms ease, transform 220ms ease;
+    transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1), transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
     max-width: 320px;
 }
 

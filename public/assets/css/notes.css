@@ -23,12 +23,14 @@
     font-weight: 700;
     color: #e4eaeb;
     margin: 0 0 4px;
+    text-wrap: balance;
 }
 
 .nt-subtitle {
     font-size: 0.875rem;
     color: #7a9ea3;
     margin: 0;
+    text-wrap: pretty;
 }
 
 /* ---- Buttons ---- */
@@ -45,9 +47,10 @@
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.15s;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .nt-btn-new:hover { background: #22818c; }
+.nt-btn-new:active { transform: scale(0.96); }
 
 /* ---- Filter Bar ---- */
 .nt-filterbar {
@@ -85,12 +88,13 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    transition: border-color 0.15s, transform 0.15s;
+    transition: border-color 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
 }
 .nt-card:hover {
     border-color: #1b6871;
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .nt-card-title {
@@ -149,7 +153,7 @@
     display: flex;
     gap: 4px;
     opacity: 0;
-    transition: opacity 0.15s;
+    transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .nt-card:hover .nt-card-actions { opacity: 1; }
 
@@ -165,7 +169,7 @@
     color: #7a9ea3;
     cursor: pointer;
     font-size: 0.8rem;
-    transition: background 0.15s, color 0.15s;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .nt-btn-icon:hover { background: #1e3438; color: #e4eaeb; }
 .nt-btn-icon--del:hover { background: #3d1a1a; color: #e07575; border-color: #5a2a2a; }
@@ -206,7 +210,7 @@
     z-index: 200;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s;
+    transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .nt-modal-overlay.open {
     opacity: 1;
@@ -220,10 +224,14 @@
     width: min(560px, 95vw);
     max-height: 90vh;
     overflow-y: auto;
-    transform: translateY(10px);
-    transition: transform 0.2s;
+    transform: translateY(8px) scale(0.97);
+    opacity: 0;
+    transition: transform 280ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.nt-modal-overlay.open .nt-modal { transform: translateY(0); }
+.nt-modal-overlay.open .nt-modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
 
 .nt-modal-header {
     display: flex;
@@ -318,9 +326,10 @@
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .nt-btn-save:hover  { background: #22818c; }
+.nt-btn-save:active { transform: scale(0.96); }
 .nt-btn-save:disabled { opacity: .55; cursor: default; }
 
 /* ---- Toast ---- */
@@ -337,7 +346,7 @@
     z-index: 300;
     opacity: 0;
     transform: translateY(8px);
-    transition: opacity 0.25s, transform 0.25s;
+    transition: opacity 220ms cubic-bezier(0.23, 1, 0.32, 1), transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
     pointer-events: none;
 }
 .nt-toast.show { opacity: 1; transform: translateY(0); }

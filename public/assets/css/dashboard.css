@@ -222,6 +222,7 @@ body.db-page {
     color: var(--db-text);
     letter-spacing: -2.2px;
     line-height: 1.25;
+    text-wrap: balance;
 }
 
 .db-subtitle {
@@ -230,6 +231,7 @@ body.db-page {
     color: var(--db-text-muted);
     letter-spacing: 0.4px;
     line-height: 24px;
+    text-wrap: pretty;
 }
 
 .db-subtitle strong {
@@ -304,6 +306,7 @@ body.db-page {
     color: var(--db-text);
     letter-spacing: -0.5px;
     line-height: 28px;
+    text-wrap: balance;
 }
 
 .db-date-badge {
@@ -332,6 +335,20 @@ body.db-page {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+    opacity: 0;
+    animation: dbFadeInUp 350ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.db-task-item:nth-child(1) { animation-delay: 0ms; }
+.db-task-item:nth-child(2) { animation-delay: 60ms; }
+.db-task-item:nth-child(3) { animation-delay: 120ms; }
+.db-task-item:nth-child(4) { animation-delay: 180ms; }
+.db-task-item:nth-child(5) { animation-delay: 240ms; }
+.db-task-item:nth-child(n+6) { animation-delay: 300ms; }
+
+@keyframes dbFadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .db-task-left {
@@ -369,6 +386,7 @@ body.db-page {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-wrap: pretty;
 }
 
 /* Member avatar stack */
@@ -491,13 +509,17 @@ body.db-page {
     font-weight: 700;
     letter-spacing: -0.35px;
     text-decoration: none;
-    transition: background 150ms;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 100ms cubic-bezier(0.23, 1, 0.32, 1);
     white-space: nowrap;
 }
 
 .db-btn-teal:hover {
     background: var(--db-teal-dark);
     color: white;
+}
+
+.db-btn-teal:active {
+    transform: scale(0.96);
 }
 
 /* =============================================
@@ -565,6 +587,7 @@ body.db-page {
     color: var(--db-text);
     line-height: 1;
     letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
 }
 
 .db-circle-label {
@@ -611,7 +634,14 @@ body.db-page {
     min-height: 166px;
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    animation: dbFadeInUp 350ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
+
+.db-notes-grid .db-note-card:nth-child(1) { animation-delay: 0ms; }
+.db-notes-grid .db-note-card:nth-child(2) { animation-delay: 60ms; }
+.db-notes-grid .db-note-card:nth-child(3) { animation-delay: 120ms; }
+.db-notes-grid .db-note-card:nth-child(4) { animation-delay: 180ms; }
 
 .db-note-type {
     display: flex;
@@ -681,7 +711,7 @@ body.db-page {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     border: none;
     cursor: pointer;
-    transition: background 150ms, transform 150ms, box-shadow 150ms;
+    transition: background 150ms cubic-bezier(0.23, 1, 0.32, 1), transform 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1);
     z-index: 150;
 }
 
@@ -689,6 +719,10 @@ body.db-page {
     background: var(--db-teal-dark);
     transform: scale(1.06);
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
+}
+
+.db-fab:active {
+    transform: scale(0.96);
 }
 
 /* =============================================

@@ -80,6 +80,7 @@
     letter-spacing: -0.8px;
     line-height: 1.1;
     margin-bottom: 8px;
+    text-wrap: balance;
 }
 
 .pf-hero-role {
