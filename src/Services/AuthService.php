@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../Repository/UserRepository.php';
 require_once __DIR__ . '/../Entity/User.php';
+require_once __DIR__ . '/../controllers/RateLimiter.php';
 
 class AuthService
 {
@@ -30,6 +31,9 @@ class AuthService
         if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
             throw new RuntimeException('Hasło musi zawierać co najmniej jedną literę i jedną cyfrę.');
         }
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+            throw new RuntimeException('Hasło musi zawierać co najmniej jeden znak specjalny (np. !@#$%^&*).');
+        }
         if ($password !== $confirm) {
             throw new RuntimeException('Hasła nie są identyczne.');
         }
@@ -45,10 +49,13 @@ class AuthService
     public function login(string $email, string $password): User
     {
         $email = trim($email);
+        $ip    = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
         if ($email === '' || $password === '') {
             throw new RuntimeException('Wypełnij wszystkie pola.');
         }
+
+        RateLimiter::check('login', $ip);
 
         $user = $this->users->findByEmail($email);
 
@@ -60,6 +67,7 @@ class AuthService
             throw new RuntimeException('Konto jest nieaktywne. Skontaktuj się z administratorem.');
         }
 
+        RateLimiter::clear('login', $ip);
         return $user;
     }
 

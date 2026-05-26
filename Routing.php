@@ -17,6 +17,7 @@ require_once 'src/controllers/StudyProgressController.php';
 require_once 'src/controllers/ShareController.php';
 require_once 'src/controllers/ProfileController.php';
 require_once 'src/controllers/CsrfGuard.php';
+require_once 'src/controllers/RateLimiter.php';
 
 class Routing {
 

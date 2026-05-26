@@ -1,12 +1,25 @@
 <?php
 
-class Session {
+class Session
+{
+    private const TIMEOUT = 1800; // 30 minutes of inactivity
 
     public static function start(): void
     {
-        if (session_status() === PHP_SESSION_NONE) {
+        if (session_status() !== PHP_SESSION_NONE) {
+            return;
+        }
+
+        self::applyCookieParams();
+        session_start();
+
+        if (self::has('_last_activity') && (time() - self::get('_last_activity')) > self::TIMEOUT) {
+            self::destroy();
+            self::applyCookieParams();
             session_start();
         }
+
+        self::set('_last_activity', time());
     }
 
     public static function get(string $key, mixed $default = null): mixed
@@ -45,5 +58,19 @@ class Session {
         }
 
         session_destroy();
+    }
+
+    private static function applyCookieParams(): void
+    {
+        $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path'     => '/',
+            'domain'   => '',
+            'secure'   => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
     }
 }

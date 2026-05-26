@@ -16,19 +16,19 @@ class AppController {
     protected function render(string $template, array $variables = []): void
     {
         $templatePath = 'src/Views/' . $template . '.php';
-        $path404      = 'src/Views/404.php';
 
-        extract($variables);
-
-        ob_start();
-        if (file_exists($templatePath)) {
-            include $templatePath;
-        } else {
-            ob_end_clean();
+        if (!file_exists($templatePath)) {
             ErrorHandler::render(404);
             return;
         }
-        echo ob_get_clean();
+
+        // Isolated scope prevents $variables keys from overwriting local variables
+        (static function (string $__path, array $__vars): void {
+            extract($__vars, EXTR_SKIP);
+            ob_start();
+            include $__path;
+            echo ob_get_clean();
+        })($templatePath, $variables);
     }
 
     protected function redirect(string $path): void
