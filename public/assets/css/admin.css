@@ -131,3 +131,19 @@
 .admin-btn-delete:hover {
     background: rgba(231,76,60,.12);
 }
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+    .admin-card {
+        overflow-x: auto;
+    }
+
+    .admin-table {
+        min-width: 640px;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-td-id   { display: none; }
+    .admin-td-date { display: none; }
+}

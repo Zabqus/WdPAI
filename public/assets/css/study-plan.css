@@ -429,11 +429,22 @@
 .sp-toast.sp-toast--error { background: #a83836; }
 
 /* ---- Responsive ---- */
+@media (max-width: 900px) {
+    .sp-canvas { padding: 96px 24px 64px; }
+    .sp-title  { font-size: 30px; letter-spacing: -1px; }
+
+    .sp-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
 @media (max-width: 680px) {
-    .sp-canvas  { padding: 96px 16px 64px; }
-    .sp-title   { font-size: 28px; }
+    .sp-canvas  { padding: 88px 16px 64px; }
+    .sp-title   { font-size: 26px; letter-spacing: -0.8px; }
     .sp-date-display { font-size: 13px; }
     .sp-add-row { flex-direction: column; }
-    .sp-select  { min-width: 0; }
+    .sp-select  { min-width: 0; width: 100%; }
     .sp-toast   { bottom: 16px; right: 16px; left: 16px; max-width: none; }
 }
