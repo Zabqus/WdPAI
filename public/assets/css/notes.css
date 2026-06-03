@@ -351,3 +351,43 @@
 }
 .nt-toast.show { opacity: 1; transform: translateY(0); }
 .nt-toast--error { background: #7a2828; }
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 900px) {
+    .nt-canvas { padding: 96px 20px 64px; }
+
+    .nt-list {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .nt-canvas { padding: 88px 14px 56px; }
+
+    .nt-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .nt-title { font-size: 1.5rem; }
+
+    .nt-filterbar { flex-direction: column; }
+    .nt-select { min-width: 0; width: 100%; }
+
+    .nt-list { grid-template-columns: 1fr; }
+
+    /* on touch devices card actions are always visible */
+    .nt-card-actions { opacity: 1; }
+
+    .nt-row--2col { grid-template-columns: 1fr; }
+
+    .nt-toast {
+        bottom: 16px;
+        right: 14px;
+        left: 14px;
+        max-width: none;
+    }
+}
