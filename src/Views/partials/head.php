@@ -16,3 +16,4 @@
 <?php endif; ?>
 
 <script src="https://kit.fontawesome.com/3bd737e540.js" crossorigin="anonymous"></script>
+<script src="/public/assets/js/main.js" defer></script>

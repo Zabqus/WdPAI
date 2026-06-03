@@ -5,29 +5,45 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ---- Sidebar toggle (mobile) ----
-    const hamburger = document.getElementById('hamburger');
-    const sidebar   = document.getElementById('sidebar');
-    const overlay   = document.getElementById('sidebar-overlay');
+    // ---- Mobile nav hamburger ----
+    const hamburger = document.getElementById('db-hamburger');
+    const navLinks  = document.getElementById('db-nav-links');
 
-    function openSidebar() {
-        sidebar && sidebar.classList.add('open');
-        overlay && overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
+    function openNav() {
+        hamburger.classList.add('open');
+        navLinks.classList.add('open');
+        hamburger.setAttribute('aria-expanded', 'true');
     }
 
-    function closeSidebar() {
-        sidebar && sidebar.classList.remove('open');
-        overlay && overlay.classList.remove('open');
-        document.body.style.overflow = '';
+    function closeNav() {
+        hamburger.classList.remove('open');
+        navLinks && navLinks.classList.remove('open');
+        hamburger && hamburger.setAttribute('aria-expanded', 'false');
     }
 
-    hamburger && hamburger.addEventListener('click', openSidebar);
-    overlay   && overlay.addEventListener('click', closeSidebar);
+    if (hamburger) {
+        hamburger.addEventListener('click', function () {
+            navLinks.classList.contains('open') ? closeNav() : openNav();
+        });
+    }
 
-    // Close on resize
+    // Close when clicking a nav link
+    navLinks && navLinks.querySelectorAll('.db-nav-link').forEach(function (link) {
+        link.addEventListener('click', closeNav);
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+        if (navLinks && navLinks.classList.contains('open')) {
+            if (!navLinks.contains(e.target) && e.target !== hamburger && !hamburger.contains(e.target)) {
+                closeNav();
+            }
+        }
+    });
+
+    // Close on resize above breakpoint
     window.addEventListener('resize', function () {
-        if (window.innerWidth > 900) closeSidebar();
+        if (window.innerWidth > 768) closeNav();
     });
 
     // ---- Auto-dismiss alerts ----

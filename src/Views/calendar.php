@@ -39,51 +39,13 @@
 </head>
 <body class="db-page">
 
-<!-- ==================== TOP NAVBAR ==================== -->
-<header class="db-navbar">
-    <div class="db-navbar-inner">
-
-        <!-- Left: Search -->
-        <div class="db-search-wrap">
-            <svg class="db-search-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                <path d="M10 10L7.45 7.45M8.5 4.75C8.5 6.82 6.82 8.5 4.75 8.5C2.68 8.5 1 6.82 1 4.75C1 2.68 2.68 1 4.75 1C6.82 1 8.5 2.68 8.5 4.75Z"
-                      stroke="#576162" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <label for="cal-search" class="sr-only">Search events</label>
-            <input type="text" id="cal-search" class="db-search-input" placeholder="Search events...">
-        </div>
-
-        <!-- Center: Nav links -->
-        <nav class="db-nav-links">
-            <a href="/dashboard"  class="db-nav-link">Dashboard</a>
-            <a href="/calendar"   class="db-nav-link active">Kalendarz</a>
-            <a href="/events"     class="db-nav-link">Wydarzenia</a>
-            <a href="/study-plan" class="db-nav-link">Plan Nauki</a>
-            <a href="/notes"      class="db-nav-link">Notatki</a>
-            <?php if (Session::get('user_role') === 'admin'): ?>
-                <a href="/admin" class="db-nav-link db-nav-link--admin">Admin</a>
-            <?php endif; ?>
-        </nav>
-
-        <div class="db-navbar-right">
-            <div class="db-nav-icons">
-                <button class="db-icon-btn" title="Powiadomienia">
-                    <i class="fa-regular fa-bell"></i>
-                </button>
-                <button class="db-icon-btn" title="Ustawienia">
-                    <i class="fa-regular fa-gear"></i>
-                </button>
-            </div>
-            <div class="db-identity">
-                <div class="db-user-avatar">
-                    <?= strtoupper(substr($userName ?? 'AL', 0, 2)) ?>
-                </div>
-                <span class="db-brand">SyncU</span>
-            </div>
-        </div>
-
-    </div>
-</header>
+<?php
+$activePage        = 'calendar';
+$searchId          = 'cal-search';
+$searchLabel       = 'Szukaj wydarzeń';
+$searchPlaceholder = 'Szukaj wydarzeń...';
+include __DIR__ . '/partials/navbar.php';
+?>
 
 <?php include __DIR__ . '/partials/sidebar.php'; ?>
 
