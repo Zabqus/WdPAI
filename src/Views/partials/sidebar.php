@@ -40,7 +40,7 @@
         <nav class="psb-nav">
             <a href="/courses" class="psb-nav-item">
                 <span class="psb-nav-icon">
-                    <i class="fa-regular fa-book-open" aria-hidden="true"></i>
+                    <i class="fa-solid fa-book-open" aria-hidden="true"></i>
                 </span>
                 Moje przedmioty
             </a>

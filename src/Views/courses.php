@@ -41,7 +41,7 @@ include __DIR__ . '/partials/navbar.php';
 
     <!-- Empty state -->
     <div class="cr-empty" id="cr-empty" hidden>
-        <i class="fa-regular fa-book-open cr-empty-icon"></i>
+        <i class="fa-solid fa-book-open cr-empty-icon"></i>
         <h3>Brak przedmiotów</h3>
         <p>Dodaj swój pierwszy kurs, aby zacząć planować naukę.</p>
         <button class="cr-btn-new cr-btn-empty-cta" id="cr-btn-empty">

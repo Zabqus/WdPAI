@@ -154,7 +154,7 @@
         card.dataset.id = note.id;
 
         const metaHtml = [
-            course ? `<span class="nt-badge nt-badge-course"><i class="fa-regular fa-book-open" aria-hidden="true"></i>${esc(course.name)}</span>` : '',
+            course ? `<span class="nt-badge nt-badge-course"><i class="fa-solid fa-book-open" aria-hidden="true"></i>${esc(course.name)}</span>` : '',
             event  ? `<span class="nt-badge nt-badge-event"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(event.title)}</span>`   : '',
         ].join('');
 
