@@ -59,7 +59,7 @@ const TaskPanel = (function () {
             <div class="tk-inner">
                 <div class="tk-header">
                     <span class="tk-header-title">
-                        <i class="fa-regular fa-list-check" aria-hidden="true"></i>
+                        <i class="fa-solid fa-list-check" aria-hidden="true"></i>
                         Zadania
                     </span>
                     <span class="tk-header-count">${done} / ${total} ukończono</span>

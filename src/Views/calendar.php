@@ -200,6 +200,6 @@ include __DIR__ . '/partials/navbar.php';
     <i class="fa-solid fa-plus"></i>
 </button>
 
-<script src="/public/assets/js/calendar.js" defer></script>
+<script src="/public/assets/js/calendar.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/calendar.js') ?>" defer></script>
 </body>
 </html>

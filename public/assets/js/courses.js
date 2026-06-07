@@ -37,7 +37,7 @@
     document.getElementById('cr-btn-cancel').addEventListener('click', closeModal);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
     form.addEventListener('submit', handleSubmit);
-    document.getElementById('cr-search').addEventListener('input', filterCards);
+    document.getElementById('cr-search')?.addEventListener('input', filterCards);
 
     // Keyboard: Escape closes modal
     document.addEventListener('keydown', (e) => {
@@ -112,7 +112,7 @@
 
     // ---- Search filter ----
     function filterCards() {
-        const q = document.getElementById('cr-search').value.toLowerCase();
+        const q = document.getElementById('cr-search')?.value.toLowerCase() ?? '';
         document.querySelectorAll('.cr-card').forEach(card => {
             card.hidden = !card.dataset.name.includes(q);
         });

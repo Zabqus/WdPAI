@@ -54,7 +54,7 @@
         renderList();
     });
 
-    searchInput.addEventListener('input', (e) => {
+    searchInput?.addEventListener('input', (e) => {
         filterSearch = e.target.value.toLowerCase();
         renderList();
     });

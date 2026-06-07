@@ -2,17 +2,7 @@
 <header class="db-navbar">
     <div class="db-navbar-inner">
 
-        <!-- Left: Search -->
-        <div class="db-search-wrap">
-            <svg class="db-search-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                <path d="M10 10L7.45 7.45M8.5 4.75C8.5 6.82 6.82 8.5 4.75 8.5C2.68 8.5 1 6.82 1 4.75C1 2.68 2.68 1 4.75 1C6.82 1 8.5 2.68 8.5 4.75Z"
-                      stroke="#576162" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <label for="<?= htmlspecialchars($searchId ?? 'db-search') ?>" class="sr-only"><?= htmlspecialchars($searchLabel ?? 'Szukaj') ?></label>
-            <input type="text" id="<?= htmlspecialchars($searchId ?? 'db-search') ?>" class="db-search-input" placeholder="<?= htmlspecialchars($searchPlaceholder ?? 'Szukaj...') ?>">
-        </div>
-
-        <!-- Hamburger (mobile only) -->
+<!-- Hamburger (mobile only) -->
         <button class="db-hamburger" id="db-hamburger" aria-label="Otwórz menu" aria-expanded="false" aria-controls="db-nav-links">
             <span></span>
             <span></span>

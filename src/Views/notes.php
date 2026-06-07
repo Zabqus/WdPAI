@@ -120,7 +120,7 @@ include __DIR__ . '/partials/navbar.php';
 <!-- ==================== TOAST ==================== -->
 <div class="nt-toast" id="nt-toast" role="status" aria-live="polite"></div>
 
-<script src="/public/assets/js/api.js"></script>
-<script src="/public/assets/js/notes.js"></script>
+<script src="/public/assets/js/api.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/api.js') ?>"></script>
+<script src="/public/assets/js/notes.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/notes.js') ?>"></script>
 </body>
 </html>

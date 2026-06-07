@@ -167,8 +167,8 @@ include __DIR__ . '/partials/navbar.php';
 <!-- ==================== TOAST ==================== -->
 <div class="ev-toast" id="ev-toast" role="status" aria-live="polite"></div>
 
-<script src="/public/assets/js/api.js"></script>
-<script src="/public/assets/js/tasks.js"></script>
-<script src="/public/assets/js/events.js"></script>
+<script src="/public/assets/js/api.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/api.js') ?>"></script>
+<script src="/public/assets/js/tasks.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/tasks.js') ?>"></script>
+<script src="/public/assets/js/events.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/events.js') ?>"></script>
 </body>
 </html>

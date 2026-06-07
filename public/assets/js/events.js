@@ -74,7 +74,7 @@
         renderList();
     });
 
-    document.getElementById('ev-search').addEventListener('input', (e) => {
+    document.getElementById('ev-search')?.addEventListener('input', (e) => {
         filterSearch = e.target.value.toLowerCase();
         renderList();
     });
@@ -206,7 +206,7 @@
                 </div>
                 ${ev.description ? `<p class="ev-card-desc">${esc(ev.description)}</p>` : ''}
                 <button class="ev-btn-tasks" title="Pokaż/ukryj zadania">
-                    <i class="fa-regular fa-list-check" aria-hidden="true"></i>
+                    <i class="fa-solid fa-list-check" aria-hidden="true"></i>
                     Zadania
                     <span class="ev-tasks-badge" hidden></span>
                     <i class="fa-solid fa-chevron-down ev-tasks-chevron" aria-hidden="true"></i>
