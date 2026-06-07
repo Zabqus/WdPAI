@@ -61,6 +61,7 @@ include __DIR__ . '/partials/navbar.php';
         <h4 class="sp-add-panel-title">
             <i class="fa-solid fa-plus" aria-hidden="true"></i>
             Dodaj zadanie do planu
+            <span class="sp-add-panel-date" id="sp-add-panel-date"></span>
         </h4>
         <div class="sp-add-row">
             <select class="sp-select" id="sp-sel-event" aria-label="Wybierz wydarzenie">
@@ -84,12 +85,21 @@ include __DIR__ . '/partials/navbar.php';
         Dodaj zadanie
     </button>
 
+    <!-- Upcoming 3-day preview -->
+    <section class="sp-upcoming" aria-label="Najbliższe 3 dni">
+        <h4 class="sp-upcoming-title">
+            <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+            Najbliższe 5 dni
+        </h4>
+        <div id="sp-upcoming-content"></div>
+    </section>
+
 </main>
 
 <!-- Toast -->
 <div class="sp-toast" id="sp-toast" role="status" aria-live="polite"></div>
 
-<script src="/public/assets/js/api.js"></script>
-<script src="/public/assets/js/study-plan.js"></script>
+<script src="/public/assets/js/api.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/api.js') ?>"></script>
+<script src="/public/assets/js/study-plan.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/study-plan.js') ?>"></script>
 </body>
 </html>

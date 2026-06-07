@@ -44,6 +44,7 @@
             showToast('Nie udało się załadować wydarzeń.', 'error');
         }
         await loadPlan();
+        loadUpcoming();
     }
 
     // ── Date helpers ───────────────────────────────────────────
@@ -215,6 +216,7 @@
             await Api.post('/study-plan/delete', { id: item.id });
             planItems = planItems.filter(p => p.id !== item.id);
             render();
+            loadUpcoming();
             showToast('Usunięto z planu.');
         } catch (err) {
             showToast(err.message || 'Błąd usuwania.', 'error');
@@ -262,11 +264,17 @@
         selTask.disabled  = true;
         addPanel.hidden   = false;
         addBtn.hidden     = true;
+
+        const dateEl = document.getElementById('sp-add-panel-date');
+        if (dateEl) {
+            const d = new Date(currentDate + 'T12:00:00');
+            dateEl.textContent = '— ' + d.toLocaleDateString('pl-PL', { weekday: 'short', day: 'numeric', month: 'short' });
+        }
+
         selEvent.focus();
     }
 
     function closePanel() {
-        addPanel.hidden = false;
         addPanel.hidden = true;
         addBtn.hidden   = false;
     }
@@ -288,11 +296,97 @@
             });
             closePanel();
             await loadPlan();
+            loadUpcoming();
             showToast('Dodano do planu.');
         } catch (err) {
             showToast(err.message || 'Błąd dodawania.', 'error');
         } finally {
             saveBtn.disabled = false;
+        }
+    }
+
+    // ── Upcoming 3-day preview ─────────────────────────────
+
+    async function loadUpcoming() {
+        const container = document.getElementById('sp-upcoming-content');
+        if (!container) return;
+
+        const DAY_LABELS = ['Jutro', 'Pojutrze', null, null, null];
+        const dates = DAY_LABELS.map((_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() + i + 1);
+            return fmtDate(d);
+        });
+
+        container.innerHTML = '<p class="sp-upcoming-loading">Ładowanie…</p>';
+
+        let results;
+        try {
+            results = await Promise.all(dates.map(date => Api.get(`/api/study-plan?date=${date}`)));
+        } catch {
+            container.innerHTML = '<p class="sp-upcoming-empty">Nie udało się załadować.</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        let hasAny = false;
+
+        try {
+            results.forEach((items, i) => {
+                if (!Array.isArray(items) || !items.length) return;
+                hasAny = true;
+
+                const done  = items.filter(it => it.task_done).length;
+                const total = items.length;
+                const suffix = total === 1 ? 'zadanie' : total < 5 ? 'zadania' : 'zadań';
+
+                const d = new Date(dates[i] + 'T12:00:00');
+                const dateLbl = d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' });
+                const dayLabel = DAY_LABELS[i] ?? d.toLocaleDateString('pl-PL', { weekday: 'long' });
+
+                const section = document.createElement('div');
+                section.className = 'sp-upcoming-day sp-upcoming-day--link';
+                section.setAttribute('role', 'button');
+                section.setAttribute('tabindex', '0');
+                section.setAttribute('title', `Przejdź do: ${dayLabel}`);
+                section.innerHTML = `
+                    <div class="sp-upcoming-day-header">
+                        <span class="sp-upcoming-day-label">${esc(dayLabel)}</span>
+                        <span class="sp-upcoming-day-date">${esc(dateLbl)}</span>
+                        <span class="sp-upcoming-day-count">${done}/${total} ${suffix}</span>
+                        <i class="fa-solid fa-arrow-right sp-upcoming-arrow" aria-hidden="true"></i>
+                    </div>`;
+
+                const ul = document.createElement('ul');
+                ul.className = 'sp-upcoming-list';
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'sp-upcoming-item' + (item.task_done ? ' sp-upcoming-item--done' : '');
+                    li.innerHTML = `
+                        <span class="sp-upcoming-color" style="background:${esc(item.course_color ?? '#1b6871')}"></span>
+                        <span class="sp-upcoming-item-title">${esc(item.task_title)}</span>
+                        <span class="sp-upcoming-item-event">${esc(item.event_title)}</span>`;
+                    ul.appendChild(li);
+                });
+
+                section.appendChild(ul);
+
+                const targetDate = dates[i];
+                const navigate = () => setDate(targetDate);
+                section.addEventListener('click', navigate);
+                section.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(); }
+                });
+
+                container.appendChild(section);
+            });
+        } catch (renderErr) {
+            container.innerHTML = '<p class="sp-upcoming-empty">Błąd wyświetlania.</p>';
+            return;
+        }
+
+        if (!hasAny) {
+            container.innerHTML = '<p class="sp-upcoming-empty">Brak zaplanowanych zadań na najbliższe 5 dni.</p>';
         }
     }
 
