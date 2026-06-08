@@ -12,7 +12,7 @@
     // State for the share modal
     let activeNoteId = null;
 
-    // DOM refs
+    // DOM refs — share modal
     const myList      = document.getElementById('sg-my-list');
     const myEmpty     = document.getElementById('sg-my-empty');
     const myCount     = document.getElementById('sg-my-count');
@@ -23,16 +23,27 @@
     const modalClose  = document.getElementById('sg-modal-close');
     const sharesList  = document.getElementById('sg-shares-list');
     const emailInput  = document.getElementById('sg-share-email');
-    const accessSel   = document.getElementById('sg-share-access');
     const shareBtn    = document.getElementById('sg-share-btn');
     const shareError  = document.getElementById('sg-share-error');
     const toast       = document.getElementById('sg-toast');
 
+    // DOM refs — read modal
+    const readOverlay = document.getElementById('sg-read-overlay');
+    const readClose   = document.getElementById('sg-read-close');
+    const readOwner   = document.getElementById('sg-read-owner');
+    const readTitle   = document.getElementById('sg-read-title');
+    const readBody    = document.getElementById('sg-read-body');
+
     // ---- Bind UI ----
     modalClose.addEventListener('click', closeShareModal);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeShareModal(); });
+    readClose.addEventListener('click', closeReadModal);
+    readOverlay.addEventListener('click', (e) => { if (e.target === readOverlay) closeReadModal(); });
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !overlay.hidden) closeShareModal();
+        if (e.key === 'Escape') {
+            if (!overlay.hidden)     closeShareModal();
+            if (!readOverlay.hidden) closeReadModal();
+        }
     });
     shareBtn.addEventListener('click', handleGrant);
     emailInput.addEventListener('keydown', (e) => {
@@ -130,38 +141,64 @@
     }
 
     function buildSharedCard(note) {
-        const date = new Date(note.created_at).toLocaleDateString('pl-PL', {
+        const date     = new Date(note.created_at).toLocaleDateString('pl-PL', {
             day: '2-digit', month: 'short', year: 'numeric',
         });
-
         const initials = (note.owner_name || '?').slice(0, 2).toUpperCase();
-        const accessLabel = note.access === 'edit' ? 'Edycja' : 'Odczyt';
-        const accessClass = note.access === 'edit' ? 'sg-card-badge--access-edit' : 'sg-card-badge--access-read';
 
         const art = document.createElement('article');
-        art.className  = 'sg-card sg-card--shared';
+        art.className  = 'sg-card sg-card--shared sg-card--clickable';
         art.dataset.id = note.note_id;
+        art.setAttribute('role', 'button');
+        art.setAttribute('tabindex', '0');
+        art.title = 'Kliknij, aby odczytać notatkę';
 
         art.innerHTML = `
             <div class="sg-card-top">
                 <h3 class="sg-card-title">${esc(note.note_title)}</h3>
-                <div class="sg-card-actions">
-                    <span class="sg-card-badge ${accessClass}" title="Poziom dostępu">
-                        ${accessLabel}
-                    </span>
-                </div>
+                <i class="fa-solid fa-arrow-up-right-from-square sg-card-expand-icon" aria-hidden="true"></i>
             </div>
-            ${note.content ? `<p class="sg-card-content">${esc(note.content)}</p>` : ''}
+            ${note.content ? `<p class="sg-card-content">${esc(note.content)}</p>` : '<p class="sg-card-content sg-card-content--empty">Brak treści</p>'}
             <div class="sg-card-owner">
                 <div class="sg-card-owner-avatar">${esc(initials)}</div>
                 <span>${esc(note.owner_name)}</span>
             </div>
             <div class="sg-card-footer">
                 <span class="sg-card-date">${date}</span>
+                <span class="sg-card-badge sg-card-badge--access-read">
+                    <i class="fa-solid fa-eye" aria-hidden="true"></i> Odczyt
+                </span>
             </div>
         `;
 
+        const open = () => openReadModal(note);
+        art.addEventListener('click', open);
+        art.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+        });
+
         return art;
+    }
+
+    // =============================================
+    //  Read Note Modal
+    // =============================================
+
+    function openReadModal(note) {
+        const initials = (note.owner_name || '?').slice(0, 2).toUpperCase();
+        readOwner.innerHTML = `
+            <div class="sg-card-owner-avatar">${esc(initials)}</div>
+            <span>Udostępnione przez <strong>${esc(note.owner_name)}</strong></span>
+        `;
+        readTitle.textContent = note.note_title || '';
+        readBody.textContent  = note.content || '';
+        readBody.classList.toggle('sg-read-body--empty', !note.content);
+        readOverlay.hidden = false;
+        readClose.focus();
+    }
+
+    function closeReadModal() {
+        readOverlay.hidden = true;
     }
 
     // =============================================
@@ -236,7 +273,7 @@
 
     async function handleGrant() {
         const email  = emailInput.value.trim();
-        const access = accessSel.value;
+        const access = 'read';
 
         shareError.textContent = '';
 

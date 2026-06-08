@@ -100,15 +100,11 @@ include __DIR__ . '/partials/navbar.php';
 
             <!-- Add new share -->
             <div class="sg-share-add">
-                <p class="sg-shares-label">Dodaj osobę</p>
+                <label class="sg-shares-label" for="sg-share-email">Dodaj osobę</label>
                 <div class="sg-share-row">
                     <input class="sg-share-input" id="sg-share-email"
                            type="email" placeholder="Adres e-mail użytkownika"
                            autocomplete="off" maxlength="255">
-                    <select class="sg-share-select" id="sg-share-access" aria-label="Poziom dostępu">
-                        <option value="read">Tylko odczyt</option>
-                        <option value="edit">Edycja</option>
-                    </select>
                     <button class="sg-share-btn" id="sg-share-btn">
                         <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
                         Udostępnij
@@ -117,6 +113,22 @@ include __DIR__ . '/partials/navbar.php';
                 <p class="sg-share-error" id="sg-share-error" role="alert"></p>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- ==================== READ NOTE MODAL ==================== -->
+<div class="sg-read-overlay" id="sg-read-overlay" role="dialog" aria-modal="true" aria-labelledby="sg-read-title" hidden>
+    <div class="sg-read-modal">
+        <div class="sg-read-header">
+            <div class="sg-read-owner" id="sg-read-owner"></div>
+            <button class="sg-modal-close" id="sg-read-close" aria-label="Zamknij">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <h2 class="sg-read-title" id="sg-read-title"></h2>
+        <div class="sg-read-body" id="sg-read-body"></div>
     </div>
 </div>
 
