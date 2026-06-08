@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <?php
-    $title    = 'Study Groups — SyncU';
+    $title    = 'Notatki — SyncU';
     $extraCss = ['dashboard', 'groups'];
     include __DIR__ . '/partials/head.php';
     ?>
@@ -10,10 +10,7 @@
 <body class="db-page">
 
 <?php
-$activePage        = 'groups';
-$searchId          = 'sg-search';
-$searchLabel       = 'Szukaj zasobów, notatek';
-$searchPlaceholder = 'Szukaj zasobów, notatek...';
+$activePage = 'groups';
 include __DIR__ . '/partials/navbar.php';
 ?>
 
@@ -22,205 +19,111 @@ include __DIR__ . '/partials/navbar.php';
 <!-- ==================== MAIN CANVAS ==================== -->
 <main class="sg-canvas">
 
-    <!-- Header -->
-    <div class="sg-header">
-        <h1 class="sg-title">Shared Notes Library</h1>
-        <p class="sg-subtitle">Access curated study resources, collaborative lecture notes, and research materials from your academic circles.</p>
-    </div>
-
-    <!-- Filter & Action Bar -->
-    <div class="sg-filterbar">
-        <div class="sg-tabs">
-            <button class="sg-tab active">All Resources</button>
-            <button class="sg-tab">Public Groups</button>
-            <button class="sg-tab">Private Library</button>
-        </div>
-        <div class="sg-actions">
-            <button class="sg-btn-filter">
-                <svg width="15" height="10" viewBox="0 0 15 10" fill="none" aria-hidden="true">
-                    <path d="M1 1h13M3 5h9M5 9h5" stroke="#476063" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                Filter
-            </button>
-            <button class="sg-btn-upload">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                    <path d="M6 1v10M1 6h10" stroke="#eafcff" stroke-width="1.8" stroke-linecap="round"/>
-                </svg>
-                Upload Notes
-            </button>
+    <!-- Page Header -->
+    <div class="sg-page-header">
+        <div>
+            <h1 class="sg-title">Biblioteka notatek</h1>
+            <p class="sg-subtitle">Twoje notatki i materiały udostępnione przez innych.</p>
         </div>
     </div>
 
-    <!-- Bento Grid -->
-    <div class="sg-bento">
+    <!-- ===== MY NOTES ===== -->
+    <section class="sg-section" aria-labelledby="sg-my-heading">
+        <div class="sg-section-header">
+            <div class="sg-section-heading-wrap">
+                <h2 class="sg-section-title" id="sg-my-heading">Moje notatki</h2>
+                <span class="sg-section-count" id="sg-my-count" hidden></span>
+            </div>
+            <a href="/notes" class="sg-link-notes">
+                Zarządzaj notatkami
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>
 
-        <!-- ===== ROW 1 ===== -->
+        <div class="sg-grid" id="sg-my-list">
+            <div class="sg-loading">
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                Ładowanie&hellip;
+            </div>
+        </div>
+        <div class="sg-empty" id="sg-my-empty" hidden>
+            <i class="fa-regular fa-note-sticky sg-empty-icon" aria-hidden="true"></i>
+            <p>Nie masz jeszcze żadnych notatek.</p>
+            <a href="/notes" class="sg-btn-create">Utwórz pierwszą notatkę</a>
+        </div>
+    </section>
 
-        <!-- Featured card (col 1-8) — image placeholder, user adds bg later -->
-        <div class="sg-featured-card">
-            <div class="sg-featured-overlay">
-                <div class="sg-featured-tags">
-                    <span class="sg-tag sg-tag-teal">Featured Study</span>
-                    <span class="sg-tag sg-tag-glass">Advanced Physics</span>
-                </div>
-                <h2 class="sg-featured-title">Quantum Mechanics: Final Review Series</h2>
-                <p class="sg-featured-desc">Complete breakdown of particle-wave duality, Schrödinger's equation, and quantum entanglement with solved problem sets&hellip;</p>
-                <div class="sg-featured-footer">
-                    <div class="sg-featured-author">
-                        <div class="sg-author-avatar">AT</div>
-                        <span>Dr. Aris Thorne &amp; 4 others</span>
-                    </div>
-                    <button class="sg-open-btn">Open Library</button>
-                </div>
+    <!-- ===== SHARED WITH ME ===== -->
+    <section class="sg-section" aria-labelledby="sg-shared-heading">
+        <div class="sg-section-header">
+            <div class="sg-section-heading-wrap">
+                <h2 class="sg-section-title" id="sg-shared-heading">Udostępnione Tobie</h2>
+                <span class="sg-section-count" id="sg-shared-count" hidden></span>
             </div>
         </div>
 
-        <!-- Subject card — Macroeconomics (col 9-12) -->
-        <div class="sg-subject-card">
-            <div class="sg-subject-top">
-                <div class="sg-subject-icon-wrap sg-icon-blue">
-                    <i class="fa-solid fa-chart-line" style="font-size:13px;color:#2e506d;"></i>
-                </div>
-                <h3 class="sg-subject-title">Macroeconomics 101</h3>
-                <p class="sg-subject-desc">Comprehensive summaries of fiscal policies and global trade dynamics. Updated yesterday.</p>
-            </div>
-            <div class="sg-subject-footer">
-                <span class="sg-subject-meta">12 Files &bull; 1.4 GB</span>
-                <i class="fa-solid fa-arrow-right" style="font-size:12px;color:#2e506d;"></i>
+        <div class="sg-grid" id="sg-shared-list">
+            <div class="sg-loading">
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                Ładowanie&hellip;
             </div>
         </div>
-
-        <!-- ===== ROW 2 — Note cards ===== -->
-
-        <!-- Organic Chemistry II (col 1-4) -->
-        <div class="sg-note-card sg-nc-1">
-            <div class="sg-note-top">
-                <div class="sg-note-icon-wrap" style="background:#e7eff0;">
-                    <i class="fa-regular fa-file-lines" style="font-size:14px;color:#576162;"></i>
-                </div>
-                <span class="sg-badge sg-badge-private">PRIVATE</span>
-            </div>
-            <h4 class="sg-note-title">Organic Chemistry II</h4>
-            <p class="sg-note-desc">Detailed reaction mechanisms for aromatic compounds. Includes color-coded diagrams for electron flow.</p>
-            <div class="sg-note-footer">
-                <div class="sg-avatar-stack">
-                    <div class="sg-mini-av" style="background:#e2e8f0;"></div>
-                    <div class="sg-mini-av" style="background:#cbd5e1;margin-left:-8px;"></div>
-                </div>
-                <span class="sg-note-meta">+2 collaborators</span>
-            </div>
+        <div class="sg-empty" id="sg-shared-empty" hidden>
+            <i class="fa-solid fa-user-group sg-empty-icon" aria-hidden="true"></i>
+            <p>Nikt nie udostępnił Ci jeszcze żadnych notatek.</p>
         </div>
-
-        <!-- Modern Architecture History (col 5-8) -->
-        <div class="sg-note-card sg-nc-2">
-            <div class="sg-note-top">
-                <div class="sg-note-icon-wrap" style="background:rgba(169,238,248,0.4);">
-                    <i class="fa-regular fa-image" style="font-size:14px;color:#1b6871;"></i>
-                </div>
-                <span class="sg-badge sg-badge-public">PUBLIC</span>
-            </div>
-            <h4 class="sg-note-title">Modern Architecture History</h4>
-            <p class="sg-note-desc">Photo archive and lecture transcripts from the &lsquo;Bauhaus to Brutalism&rsquo; module. Highly visual content.</p>
-            <div class="sg-note-footer-row">
-                <span class="sg-note-meta">456 Views</span>
-                <i class="fa-regular fa-bookmark" style="font-size:14px;color:#576162;cursor:pointer;"></i>
-            </div>
-        </div>
-
-        <!-- Data Structures & Algos (col 9-12) -->
-        <div class="sg-note-card sg-nc-3">
-            <div class="sg-note-top">
-                <div class="sg-note-icon-wrap" style="background:rgba(205,231,235,0.4);">
-                    <i class="fa-solid fa-code" style="font-size:13px;color:#3d5659;"></i>
-                </div>
-                <span class="sg-badge sg-badge-draft">DRAFT</span>
-            </div>
-            <h4 class="sg-note-title">Data Structures &amp; Algos</h4>
-            <p class="sg-note-desc">Personal notes on Big O notation, graph traversal algorithms, and hash map implementations in Python.</p>
-            <div class="sg-note-footer-row">
-                <div class="sg-progress-track">
-                    <div class="sg-progress-fill" style="width:75%;"></div>
-                </div>
-                <span class="sg-note-meta">75% complete</span>
-            </div>
-        </div>
-
-        <!-- ===== ROW 3 — Research Hub ===== -->
-        <div class="sg-hub-card">
-            <!-- image placeholder — user replaces with <img> or background-image -->
-            <div class="sg-hub-img" aria-hidden="true"></div>
-            <div class="sg-hub-content">
-                <h3 class="sg-hub-title">Inter-University Research Hub</h3>
-                <p class="sg-hub-desc">Join the massive open library curated by students from over 50 universities. Access peer-reviewed study guides and previous exam banks globally.</p>
-                <div class="sg-hub-actions">
-                    <button class="sg-btn-join">Join Global Hub</button>
-                    <button class="sg-btn-browse">Browse Institutions</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== ROW 4 — Bottom cards ===== -->
-
-        <!-- Recent Contributions (col 1-6) -->
-        <div class="sg-bottom-card sg-contributions">
-            <div class="sg-bottom-header">
-                <h3 class="sg-bottom-title">Recent Contributions</h3>
-                <a href="#" class="sg-view-all">VIEW ALL</a>
-            </div>
-            <div class="sg-file-list">
-                <div class="sg-file-item">
-                    <div class="sg-file-icon-wrap">
-                        <i class="fa-regular fa-file-pdf" style="font-size:16px;color:#576162;"></i>
-                    </div>
-                    <div class="sg-file-info">
-                        <div class="sg-file-name">Neurobiology_Lab_Report.pdf</div>
-                        <div class="sg-file-meta">Shared by Sarah Jenkins &bull; 2h ago</div>
-                    </div>
-                    <button class="sg-file-menu" aria-label="Options">
-                        <span></span><span></span><span></span>
-                    </button>
-                </div>
-                <div class="sg-file-item">
-                    <div class="sg-file-icon-wrap">
-                        <i class="fa-regular fa-file-word" style="font-size:16px;color:#576162;"></i>
-                    </div>
-                    <div class="sg-file-info">
-                        <div class="sg-file-name">Ethics_In_AI_Summary.docx</div>
-                        <div class="sg-file-meta">Shared by Marcus Chen &bull; 5h ago</div>
-                    </div>
-                    <button class="sg-file-menu" aria-label="Options">
-                        <span></span><span></span><span></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trending Subjects (col 7-12) -->
-        <div class="sg-bottom-card sg-trending">
-            <div class="sg-bottom-header">
-                <h3 class="sg-bottom-title">Trending Subjects</h3>
-                <button class="sg-refresh-btn" aria-label="Refresh">
-                    <i class="fa-solid fa-rotate" style="font-size:12px;color:#576162;"></i>
-                </button>
-            </div>
-            <div class="sg-tag-cloud">
-                <span class="sg-topic-tag">Machine Learning</span>
-                <span class="sg-topic-tag">Psychology 101</span>
-                <span class="sg-topic-tag">Political Theory</span>
-                <span class="sg-topic-tag">Game Dev</span>
-                <span class="sg-topic-tag">French B2</span>
-                <span class="sg-topic-tag">Calculus III</span>
-            </div>
-        </div>
-
-    </div><!-- /sg-bento -->
+    </section>
 
 </main>
 
-<!-- FAB -->
-<button class="db-fab" title="Upload notes">
-    <i class="fa-solid fa-plus"></i>
-</button>
+<!-- ==================== SHARE MODAL ==================== -->
+<div class="sg-modal-overlay" id="sg-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="sg-modal-title" hidden>
+    <div class="sg-modal">
+        <div class="sg-modal-header">
+            <h2 class="sg-modal-title" id="sg-modal-title">Udostępnij notatkę</h2>
+            <button class="sg-modal-close" id="sg-modal-close" aria-label="Zamknij">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
 
+        <div class="sg-modal-body">
+
+            <!-- Current shares -->
+            <div class="sg-shares-section">
+                <p class="sg-shares-label">Obecny dostęp</p>
+                <div id="sg-shares-list" class="sg-shares-list">
+                    <span class="sg-shares-loading">Ładowanie&hellip;</span>
+                </div>
+            </div>
+
+            <!-- Add new share -->
+            <div class="sg-share-add">
+                <p class="sg-shares-label">Dodaj osobę</p>
+                <div class="sg-share-row">
+                    <input class="sg-share-input" id="sg-share-email"
+                           type="email" placeholder="Adres e-mail użytkownika"
+                           autocomplete="off" maxlength="255">
+                    <select class="sg-share-select" id="sg-share-access" aria-label="Poziom dostępu">
+                        <option value="read">Tylko odczyt</option>
+                        <option value="edit">Edycja</option>
+                    </select>
+                    <button class="sg-share-btn" id="sg-share-btn">
+                        <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                        Udostępnij
+                    </button>
+                </div>
+                <p class="sg-share-error" id="sg-share-error" role="alert"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div class="sg-toast" id="sg-toast" role="status" aria-live="polite"></div>
+
+<script src="/public/assets/js/api.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/api.js') ?>"></script>
+<script src="/public/assets/js/groups.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/groups.js') ?>" defer></script>
 </body>
 </html>
