@@ -84,16 +84,6 @@ include __DIR__ . '/partials/navbar.php';
             </div>
         </div>
 
-        <!-- Placeholder -->
-        <div class="pf-card pf-card--soon">
-            <div class="pf-soon-icon">
-                <i class="fa-regular fa-chart-bar" aria-hidden="true"></i>
-            </div>
-            <span class="pf-soon-label">Statystyki nauki</span>
-            <span class="pf-soon-sub">Postępy, aktywność, cele</span>
-            <span class="pf-soon-badge">Wkrótce</span>
-        </div>
-
     </div>
 
 </main>

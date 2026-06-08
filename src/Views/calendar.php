@@ -149,24 +149,10 @@ include __DIR__ . '/partials/navbar.php';
         <!-- ========== SIDEBAR (3/12) ========== -->
         <aside class="cal-aside">
 
-            <!-- Focus Mode Card -->
-            <div class="cal-focus-card">
-                <div class="cal-focus-blob" aria-hidden="true"></div>
-                <span class="cal-focus-eyebrow">Monthly Load</span>
-                <h2 class="cal-focus-title">Focus Mode</h2>
-                <p class="cal-focus-desc" id="cal-focus-desc">
-                    Ładowanie wydarzeń&hellip;
-                </p>
-                <button class="cal-focus-btn">Quick View</button>
-            </div>
-
             <!-- Upcoming Events -->
             <div class="cal-events-section">
                 <div class="cal-events-header">
-                    <h3 class="cal-events-title">Upcoming Events</h3>
-                    <button class="cal-events-filter" aria-label="Filter events">
-                        <i class="fa-solid fa-sliders" style="font-size:12px;color:#576162;"></i>
-                    </button>
+                    <h3 class="cal-events-title">Nadchodzące wydarzenia</h3>
                 </div>
 
                 <div id="cal-event-list" class="cal-event-list">
@@ -174,20 +160,12 @@ include __DIR__ . '/partials/navbar.php';
                 </div>
 
                 <a href="/events" class="cal-view-all-btn">
-                    View full list
+                    Pełna lista
                     <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
                         <path d="M1.5 7.5L7.5 1.5M7.5 1.5H2.5M7.5 1.5V6.5"
                               stroke="#1b6871" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </a>
-            </div>
-
-            <!-- Promo / Community Card -->
-            <div class="cal-promo-card">
-                <div class="cal-promo-overlay">
-                    <span class="cal-promo-eyebrow">Community</span>
-                    <p class="cal-promo-text">Find your study group this semester.</p>
-                </div>
             </div>
 
         </aside><!-- /cal-aside -->
