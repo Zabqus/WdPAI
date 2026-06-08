@@ -117,18 +117,20 @@ include __DIR__ . '/partials/navbar.php';
         <!-- ===== STUDY PROGRESS ===== -->
         <section class="db-card db-progress">
             <h2 class="db-section-title">Study Progress</h2>
+            <?php if (empty($studyProgress)): ?>
+            <div class="db-progress-empty">
+                <i class="fa-solid fa-chart-pie db-progress-empty-icon" aria-hidden="true"></i>
+                <p>Brak zaplanowanego materiału</p>
+                <a href="/events" class="db-progress-empty-link">Dodaj wydarzenie</a>
+            </div>
+            <?php else: ?>
             <div class="db-circles">
                 <?php
-                $progressItems = !empty($studyProgress) ? $studyProgress : [
-                    ['label' => 'Physics', 'pct' => 75, 'color' => '#1b6871'],
-                    ['label' => 'Ethics',  'pct' => 40, 'color' => '#416280'],
-                    ['label' => 'Math',    'pct' => 90, 'color' => '#3f575b'],
-                ];
                 $r = 44;
                 $circ = 2 * M_PI * $r;
-                foreach ($progressItems as $item):
+                foreach ($studyProgress as $item):
                     $pct    = (int)($item['pct'] ?? 0);
-                    $color  = $item['color'] ?? '#1b6871';
+                    $color  = htmlspecialchars($item['color'] ?? '#1b6871');
                     $label  = htmlspecialchars($item['label'] ?? '');
                     $offset = $circ * (1 - $pct / 100);
                 ?>
@@ -137,7 +139,7 @@ include __DIR__ . '/partials/navbar.php';
                         <svg class="db-circle-svg" viewBox="0 0 112 112" width="112" height="112" aria-hidden="true">
                             <circle class="db-circle-track" cx="56" cy="56" r="<?= $r ?>"/>
                             <circle class="db-circle-fill" cx="56" cy="56" r="<?= $r ?>"
-                                    style="stroke:<?= htmlspecialchars($color) ?>;stroke-dasharray:<?= round($circ, 2) ?>;stroke-dashoffset:<?= round($offset, 2) ?>"/>
+                                    style="stroke:<?= $color ?>;stroke-dasharray:<?= round($circ, 2) ?>;stroke-dashoffset:<?= round($offset, 2) ?>"/>
                         </svg>
                         <div class="db-circle-pct"><?= $pct ?>%</div>
                     </div>
@@ -145,46 +147,26 @@ include __DIR__ . '/partials/navbar.php';
                 </div>
                 <?php endforeach; ?>
             </div>
+            <?php endif; ?>
         </section>
 
         <!-- ===== SHARED RESOURCES ===== -->
         <section class="db-card db-resources">
             <div class="db-card-top">
-                <h2 class="db-section-title">Shared Resources</h2>
-                <a href="/notes" class="db-link-teal">
-                    ALL NOTES
+                <h2 class="db-section-title">Udostępnione Tobie</h2>
+                <a href="/groups" class="db-link-teal">
+                    WSZYSTKIE
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
                         <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3M8.5 1.5V7"
                               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </a>
             </div>
-            <div class="db-notes-grid">
-
-                <div class="db-note-card">
-                    <div class="db-note-type">
-                        <i class="fa-regular fa-file-lines" style="color:#1b6871;font-size:15px;"></i>
-                        <span class="db-note-type-label">PDF &bull; 4.2 MB</span>
-                    </div>
-                    <div class="db-note-title">Quantum Tunneling Refined Notes</div>
-                    <div class="db-note-author">
-                        <div class="db-author-avatar" style="background:#7c9eb5;">SM</div>
-                        <span>Shared by Sarah Miller</span>
-                    </div>
+            <div class="db-notes-grid" id="db-shared-grid">
+                <div class="db-shared-loading">
+                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                    Ładowanie&hellip;
                 </div>
-
-                <div class="db-note-card">
-                    <div class="db-note-type">
-                        <i class="fa-regular fa-circle-dot" style="color:#1b6871;font-size:14px;"></i>
-                        <span class="db-note-type-label">COLLAB &bull; LIVE</span>
-                    </div>
-                    <div class="db-note-title">Ethics Brainstorming Board</div>
-                    <div class="db-note-author">
-                        <div class="db-author-avatar" style="background:#416280;">TK</div>
-                        <span>Active now: 4 people</span>
-                    </div>
-                </div>
-
             </div>
         </section>
 
@@ -197,5 +179,49 @@ include __DIR__ . '/partials/navbar.php';
     <i class="fa-solid fa-plus"></i>
 </button>
 
+<script src="/public/assets/js/api.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/api.js') ?>"></script>
+<script>
+(function () {
+    const grid = document.getElementById('db-shared-grid');
+    if (!grid) return;
+
+    Api.get('/api/shares/notes').then(function (notes) {
+        grid.innerHTML = '';
+
+        if (!notes || notes.length === 0) {
+            grid.innerHTML = '<p class="db-shared-empty">Nikt nie udostępnił Ci jeszcze żadnych notatek.</p>';
+            return;
+        }
+
+        // Show at most 4
+        notes.slice(0, 4).forEach(function (note) {
+            var initials = (note.owner_name || '?').slice(0, 2).toUpperCase();
+            var colors   = ['#1b6871', '#416280', '#3f575b', '#7c9eb5', '#a9b4b5'];
+            var color    = colors[note.owner_id % colors.length];
+            var date     = new Date(note.created_at).toLocaleDateString('pl-PL', { day: '2-digit', month: 'short' });
+
+            var card = document.createElement('div');
+            card.className = 'db-note-card';
+            card.innerHTML =
+                '<div class="db-note-type">' +
+                    '<i class="fa-regular fa-note-sticky" style="color:#1b6871;font-size:15px;"></i>' +
+                    '<span class="db-note-type-label">NOTATKA &bull; ' + date + '</span>' +
+                '</div>' +
+                '<div class="db-note-title">' + esc(note.note_title) + '</div>' +
+                '<div class="db-note-author">' +
+                    '<div class="db-author-avatar" style="background:' + color + ';">' + initials + '</div>' +
+                    '<span>Udostępnione przez ' + esc(note.owner_name) + '</span>' +
+                '</div>';
+            grid.appendChild(card);
+        });
+    }).catch(function () {
+        grid.innerHTML = '<p class="db-shared-empty">Nie udało się załadować notatek.</p>';
+    });
+
+    function esc(str) {
+        return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+})();
+</script>
 </body>
 </html>

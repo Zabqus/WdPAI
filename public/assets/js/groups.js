@@ -71,7 +71,6 @@
             return;
         }
 
-        myEmpty.hidden = false; // keep hidden
         myEmpty.hidden = true;
         myCount.textContent = myNotes.length;
         myCount.hidden = false;

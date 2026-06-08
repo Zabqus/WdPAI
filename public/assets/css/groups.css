@@ -285,6 +285,7 @@
     color: #576162;
     font-size: 14px;
 }
+.sg-empty[hidden] { display: none; }
 
 .sg-empty-icon {
     font-size: 28px;
