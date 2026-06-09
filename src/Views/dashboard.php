@@ -174,11 +174,6 @@ include __DIR__ . '/partials/navbar.php';
 
 </main>
 
-<!-- Floating Action Button -->
-<button class="db-fab" title="New session">
-    <i class="fa-solid fa-plus"></i>
-</button>
-
 <script src="/public/assets/js/api.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/api.js') ?>"></script>
 <script src="/public/assets/js/dashboard.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/dashboard.js') ?>" defer></script>
 </body>

@@ -173,11 +173,6 @@ include __DIR__ . '/partials/navbar.php';
     </div><!-- /cal-grid -->
 </main>
 
-<!-- Floating Action Button -->
-<button class="db-fab" title="Add event">
-    <i class="fa-solid fa-plus"></i>
-</button>
-
 <script src="/public/assets/js/calendar.js?v=<?= filemtime(__DIR__ . '/../../public/assets/js/calendar.js') ?>" defer></script>
 </body>
 </html>

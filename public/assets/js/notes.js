@@ -153,24 +153,30 @@
         card.className  = 'nt-card';
         card.dataset.id = note.id;
 
-        const metaHtml = [
+        const badges = [
             course ? `<span class="nt-badge nt-badge-course"><i class="fa-solid fa-book-open" aria-hidden="true"></i>${esc(course.name)}</span>` : '',
-            event  ? `<span class="nt-badge nt-badge-event"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(event.title)}</span>`   : '',
-        ].join('');
+            event  ? `<span class="nt-badge nt-badge-event"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(event.title)}</span>`  : '',
+        ].filter(Boolean).join('');
 
         card.innerHTML = `
-            <div class="nt-card-actions">
-                <button class="nt-btn-icon" title="Edytuj" aria-label="Edytuj ${esc(note.title)}">
-                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
-                </button>
-                <button class="nt-btn-icon nt-btn-icon--del" title="Usuń" aria-label="Usuń ${esc(note.title)}">
-                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
-                </button>
+            <div class="nt-card-header">
+                <div class="nt-card-info">
+                    <h3 class="nt-card-title">${esc(note.title)}</h3>
+                    <div class="nt-card-meta">
+                        ${badges}
+                        <span class="nt-card-date">${date}</span>
+                    </div>
+                </div>
+                <div class="nt-card-actions">
+                    <button class="nt-btn-icon" title="Edytuj" aria-label="Edytuj ${esc(note.title)}">
+                        <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                    </button>
+                    <button class="nt-btn-icon nt-btn-icon--del" title="Usuń" aria-label="Usuń ${esc(note.title)}">
+                        <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                    </button>
+                </div>
             </div>
-            <h3 class="nt-card-title">${esc(note.title)}</h3>
             ${note.content ? `<p class="nt-card-content">${esc(note.content)}</p>` : ''}
-            ${metaHtml ? `<div class="nt-card-meta">${metaHtml}</div>` : ''}
-            <span class="nt-card-date">${date}</span>
         `;
 
         card.querySelector('.nt-btn-icon:not(.nt-btn-icon--del)').addEventListener('click', () => openModal(note));
