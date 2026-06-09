@@ -206,6 +206,13 @@ Wzorce: **MVC**, **Repository**, **Service Layer**, **Singleton** (Database), **
 
 Schemat w `docker/db/init/init.sql`, dane testowe w `docker/db/init/seed.sql`.
 
+### Diagram ERD
+
+![ERD](ERD.png)
+
+[Źródło — dbdiagram.io](https://dbdiagram.io/d/6a287e2a8eb8ca4bfe8e3003)
+
+
 ---
 
 ## Bezpieczeństwo
@@ -252,3 +259,119 @@ Schemat w `docker/db/init/init.sql`, dane testowe w `docker/db/init/seed.sql`.
 ├── phpunit.xml
 └── Routing.php
 ```
+
+---
+
+## Screenshoty
+
+### Wersja desktopowa
+
+| Ekran | Podgląd |
+|-------|---------|
+| Logowanie | ![Login](screens/Login.png) |
+| Kalendarz | ![Calendar](screens/Calendar.png) |
+| Wydarzenia | ![Events](screens/Events.png) |
+| Dodawanie wydarzenia | ![Added event](screens/Added_event.png) |
+| Notatki | ![Notes](screens/Notes.png) |
+| Panel admina | ![Admin](screens/Admin.png) |
+
+### Wersja mobilna
+
+| Ekran | Podgląd |
+|-------|---------|
+| Kalendarz | ![Calendar mobile](screens/Calendar_mobile.png) |
+| Wydarzenia | ![Events mobile](screens/Events_mobile.png) |
+| Plan nauki | ![StudyPlan mobile](screens/StudyPlan_mobile.png) |
+
+---
+
+## Checklista ukończonych elementów
+
+### Technologie i środowisko
+
+- [x] PHP 8.2 OOP — bez frameworka, własny MVC
+- [x] PostgreSQL 16 — PDO, prepared statements
+- [x] HTML5 + CSS3 + JavaScript (Fetch API)
+- [x] Docker + Docker Compose (nginx, php-fpm, postgres, pgadmin)
+- [x] Plik `.env.example` z opisem zmiennych
+- [x] Repozytorium GIT z historią commitów
+
+### Architektura
+
+- [x] Wzorzec MVC (Controllers / Services / Repositories / Entities / Views)
+- [x] Własny router (`Routing.php`) z obsługą GET/POST
+- [x] Guardy: AuthGuard, RoleGuard, CsrfGuard w routerze
+- [x] Singleton Database (PDO wrapper)
+- [x] Repository Pattern (6 repozytoriów)
+- [x] Service Layer (3 serwisy: Auth, Share, StudyProgress)
+- [x] Niemutowalne encje domenowe (Value Object)
+- [x] Kod zgodny z zasadami SOLID i OOP
+
+### Baza danych
+
+- [x] 9 tabel z właściwymi typami danych
+- [x] Relacja 1:1 — `users` → `user_profiles`
+- [x] Relacja 1:N — `users→courses→events→tasks`, `users→notes`
+- [x] Relacja M:N — `users ↔ events` (event_shares), `users ↔ notes` (note_shares)
+- [x] Widok 1: `v_events_with_course` (JOIN 3 tabel)
+- [x] Widok 2: `v_event_progress` (postęp z funkcją DB)
+- [x] Funkcja: `get_completion_pct(event_id)` — % ukończonych zadań
+- [x] Trigger 1: `trg_update_event_status` — auto-aktualizacja statusu eventu
+- [x] Trigger 2: `trg_create_user_profile` — auto-tworzenie profilu po rejestracji
+- [x] Trigger 3: `trg_prevent_self_share` — blokada udostępnienia samemu sobie
+- [x] Transakcja z poziomem izolacji REPEATABLE READ (`createWithTasks`)
+- [x] FK actions: CASCADE i SET NULL
+- [x] Normalizacja do 3NF, brak redundancji
+- [x] Plik `init.sql` (schemat) + `seed.sql` (dane testowe)
+
+### Funkcjonalności aplikacji
+
+- [x] Rejestracja z walidacją siły hasła
+- [x] Logowanie z rate limitingiem (5 prób / 15 min / IP)
+- [x] Utrzymanie sesji (timeout 30 min, regeneracja ID)
+- [x] Wylogowanie
+- [x] Role użytkowników: `user` / `admin`
+- [x] Panel admina: zarządzanie rolami, blokada kont, usuwanie użytkowników
+- [x] CRUD kursów (z kolorami)
+- [x] CRUD wydarzeń (z filtrowaniem po kursie i miesiącu)
+- [x] CRUD zadań (checklist, toggle, reorder, trigger aktualizuje event)
+- [x] CRUD notatek (powiązanie z kursem lub wydarzeniem)
+- [x] Plan nauki — przypisanie zadań do konkretnych dni
+- [x] Postęp nauki — % ukończenia per wydarzenie, plan dzienny
+- [x] Współdzielenie wydarzeń i notatek (read/edit, cofnięcie dostępu)
+- [x] Widok kalendarza (miesięczny, dynamiczne Fetch API)
+- [x] Dashboard (dzisiejszy plan, nadchodzące eventy, postęp kursów)
+
+### Frontend
+
+- [x] Responsywny design — CSS media queries (480px–1280px)
+- [x] Dynamiczne operacje bez przeładowania strony (Fetch API)
+- [x] Centralny wrapper `Api` (CSRF token, X-Requested-With, obsługa błędów)
+- [x] Modale dla operacji CRUD
+- [x] Walidacja po stronie frontendu i backendu
+
+### Bezpieczeństwo
+
+- [x] Ochrona CSRF (token 64-znakowy, `hash_equals()`, form + AJAX header)
+- [x] Bcrypt cost 12 (hashowanie haseł)
+- [x] Rate limiting na logowanie
+- [x] SQL Injection — PDO prepared statements, `ATTR_EMULATE_PREPARES=false`
+- [x] XSS — `htmlspecialchars()` w szablonach
+- [x] Weryfikacja ownership przed każdą modyfikacją zasobu
+- [x] Secure cookie flags: HttpOnly, SameSite=Lax
+
+### Obsługa błędów
+
+- [x] Globalna obsługa błędów (`ErrorHandler.php`)
+- [x] Strony błędów: 400, 401, 403, 404, 500
+- [x] JSON błędy dla żądań AJAX (właściwe kody HTTP)
+
+### Testy i dokumentacja
+
+- [x] Testy PHPUnit: `AuthServiceTest.php` (6 testów), `StudyProgressGroupingTest.php` (2 testy)
+- [x] Testy integracyjne endpointów: `tests/endpoints.sh` (curl/bash)
+- [x] Scenariusz testowy krok po kroku: `tests/scenario.md`
+- [x] Diagram ERD: `ERD.png`
+- [x] Diagram architektury (sekcja Architektura w README)
+- [x] Screenshoty — wersja desktopowa i mobilna
+- [x] README.md z instrukcją uruchomienia, zmiennymi, danymi testowymi
