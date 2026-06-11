@@ -33,6 +33,13 @@
     const eventFilter   = document.getElementById('nt-event-filter');
     const searchInput   = document.getElementById('nt-search');
 
+    // Read modal refs
+    const readOverlay   = document.getElementById('nt-read-overlay');
+    const readClose     = document.getElementById('nt-read-close');
+    const readMeta      = document.getElementById('nt-read-meta');
+    const readTitle     = document.getElementById('nt-read-title');
+    const readBody      = document.getElementById('nt-read-body');
+
     // ---- Bind events ----
     document.getElementById('nt-btn-new').addEventListener('click', () => openModal());
     document.getElementById('nt-btn-empty').addEventListener('click', () => openModal());
@@ -40,6 +47,9 @@
     document.getElementById('nt-btn-cancel').addEventListener('click', closeModal);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
     form.addEventListener('submit', handleSubmit);
+
+    readClose.addEventListener('click', closeReadModal);
+    readOverlay.addEventListener('click', (e) => { if (e.target === readOverlay) closeReadModal(); });
 
     courseFilter.addEventListener('change', () => {
         filterCourse = courseFilter.value;
@@ -60,7 +70,10 @@
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+        if (e.key === 'Escape') {
+            if (!readOverlay.hidden) closeReadModal();
+            else if (overlay.classList.contains('open')) closeModal();
+        }
     });
 
     // ---- Init ----
@@ -179,10 +192,43 @@
             ${note.content ? `<p class="nt-card-content">${esc(note.content)}</p>` : ''}
         `;
 
+        card.querySelector('.nt-card-title').addEventListener('click', () => openReadModal(note));
         card.querySelector('.nt-btn-icon:not(.nt-btn-icon--del)').addEventListener('click', () => openModal(note));
         card.querySelector('.nt-btn-icon--del').addEventListener('click', () => deleteNote(note));
 
         return card;
+    }
+
+    // ---- Read Modal ----
+    function openReadModal(note) {
+        const course = courses.find(c => c.id === note.course_id);
+        const event  = events.find(e => e.id === note.event_id);
+        const date   = new Date(note.created_at).toLocaleDateString('pl-PL', {
+            day: '2-digit', month: 'short', year: 'numeric',
+        });
+
+        const badges = [
+            course ? `<span class="nt-badge nt-badge-course"><i class="fa-solid fa-book-open" aria-hidden="true"></i>${esc(course.name)}</span>` : '',
+            event  ? `<span class="nt-badge nt-badge-event"><i class="fa-regular fa-calendar" aria-hidden="true"></i>${esc(event.title)}</span>`  : '',
+            `<span class="nt-card-date">${date}</span>`,
+        ].filter(Boolean).join('');
+
+        readMeta.innerHTML  = badges;
+        readTitle.textContent = note.title;
+
+        if (note.content) {
+            readBody.textContent = note.content;
+            readBody.classList.remove('nt-read-body--empty');
+        } else {
+            readBody.textContent = 'Brak treści.';
+            readBody.classList.add('nt-read-body--empty');
+        }
+
+        readOverlay.hidden = false;
+    }
+
+    function closeReadModal() {
+        readOverlay.hidden = true;
     }
 
     // ---- Modal ----

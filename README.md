@@ -47,7 +47,7 @@ Otwórz `.env` i zmień hasła na własne (szczegóły w sekcji [Konfiguracja .e
 docker compose up --build -d
 ```
 
-Pierwsze uruchomienie pobiera obrazy i buduje kontenery (~2–3 minuty).  
+Pierwsze uruchomienie pobiera obrazy i buduje kontenery.  
 Skrypt `docker/db/init/init.sql` tworzy schemat bazy, a `seed.sql` wgrywa dane testowe.
 
 ### 4. Otwórz aplikację
@@ -76,15 +76,13 @@ POSTGRES_HOST=db               # nazwa serwisu w docker-compose — nie zmienia�
 POSTGRES_PORT=5432             # port wewnętrzny kontenera — nie zmieniać
 POSTGRES_DB=syncu              # nazwa bazy danych
 POSTGRES_USER=syncu_user       # użytkownik bazy
-POSTGRES_PASSWORD=...          # hasło — ZMIEŃ na własne, silne hasło
+POSTGRES_PASSWORD=...          
 
 # Konto administratora pgAdmin (panel webowy na porcie 5050)
 PGADMIN_DEFAULT_EMAIL=admin@example.com
-PGADMIN_DEFAULT_PASSWORD=...   # ZMIEŃ na własne hasło
+PGADMIN_DEFAULT_PASSWORD=...   
 ```
 
-> **Uwaga:** plik `.env` zawiera dane uwierzytelniające — nie commituj go do repozytorium.  
-> Szablon bez haseł jest w `.env.example`.
 
 ---
 

@@ -117,6 +117,22 @@ include __DIR__ . '/partials/navbar.php';
     </div>
 </div>
 
+<!-- ==================== READ MODAL ==================== -->
+<div class="nt-read-overlay" id="nt-read-overlay" role="dialog" aria-modal="true" aria-labelledby="nt-read-title" hidden>
+    <div class="nt-read-modal">
+        <div class="nt-read-header">
+            <div class="nt-read-meta" id="nt-read-meta"></div>
+            <button class="nt-modal-close" id="nt-read-close" aria-label="Zamknij">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <h2 class="nt-read-title" id="nt-read-title"></h2>
+        <div class="nt-read-body" id="nt-read-body"></div>
+    </div>
+</div>
+
 <!-- ==================== TOAST ==================== -->
 <div class="nt-toast" id="nt-toast" role="status" aria-live="polite"></div>
 
