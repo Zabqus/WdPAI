@@ -136,30 +136,7 @@ Skrypt testuje kolejno: dostępność stron, ochronę tras (401/302/403), logowa
 
 ## Architektura
 
-```
-Przeglądarka
-    │  HTTP (Fetch API / form submit)
-    ▼
-Nginx : 8080
-    │  FastCGI
-    ▼
-PHP-FPM
-    │
-    ├── index.php → Routing.php
-    │       │
-    │       ├── AuthGuard   (sesja)
-    │       ├── RoleGuard   (rola admin)
-    │       └── CsrfGuard   (token CSRF)
-    │
-    ├── Controllers/      ← obsługa żądań HTTP
-    ├── Services/         ← logika biznesowa
-    ├── Repository/       ← dostęp do danych (PDO)
-    ├── Entity/           ← niemutowalne obiekty domenowe
-    └── Views/            ← szablony PHP (HTML)
-            │
-            ▼
-        PostgreSQL : 5432
-```
+![Architektura](architecture.png)
 
 Wzorce: **MVC**, **Repository**, **Service Layer**, **Singleton** (Database), **Value Object** (Entity).
 
