@@ -26,11 +26,11 @@ include __DIR__ . '/partials/navbar.php';
     <div class="db-page-header">
         <?php
             $hour  = (int)date('H');
-            $greet = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening');
+            $greet = $hour < 12 ? 'Dzień dobry' : ($hour < 18 ? 'Dzień dobry' : 'Dobry wieczór');
         ?>
         <h1 class="db-greeting"><?= $greet ?>, <?= htmlspecialchars($userName ?? 'Alex') ?>.</h1>
         <p class="db-subtitle">
-            You have <strong><?= $todayCount ?> event<?= $todayCount !== 1 ? 's' : '' ?></strong> scheduled for today.
+            Wydarzenia zaplanowane na dziś: <strong><?= $todayCount ?></strong>
         </p>
     </div>
 
@@ -40,20 +40,20 @@ include __DIR__ . '/partials/navbar.php';
         <!-- ===== TODAY'S FOCUS ===== -->
         <section class="db-card db-focus">
             <div class="db-card-top">
-                <h2 class="db-section-title">Today's Focus</h2>
-                <span class="db-date-badge"><?= strtoupper(date('F d, Y')) ?></span>
+                <h2 class="db-section-title">Dzisiejszy plan</h2>
+                <span class="db-date-badge"><?= strtoupper(date('d.m.Y')) ?></span>
             </div>
             <div class="db-task-list">
 
                 <?php if (empty($todayPlan)): ?>
-                <p style="font-size:14px;color:var(--db-text-muted);padding:4px 0;">No tasks planned for today.</p>
+                <p style="font-size:14px;color:var(--db-text-muted);padding:4px 0;">Brak zaplanowanych zadań na dziś.</p>
                 <?php else: ?>
                 <?php foreach ($todayPlan as $ev):
-                    $startTime = date('g:i A', strtotime($ev['start_at']));
+                    $startTime = date('H:i', strtotime($ev['start_at']));
                     $daysUntil = (int) $ev['days_until'];
-                    if ($daysUntil > 0)       $dueLabel = 'In ' . $daysUntil . ' day' . ($daysUntil > 1 ? 's' : '');
-                    elseif ($daysUntil === 0)  $dueLabel = 'Today';
-                    else                       $dueLabel = abs($daysUntil) . 'd ago';
+                    if ($daysUntil > 0)       $dueLabel = 'Za ' . $daysUntil . ' ' . ($daysUntil === 1 ? 'dzień' : 'dni');
+                    elseif ($daysUntil === 0)  $dueLabel = 'Dziś';
+                    else                       $dueLabel = abs($daysUntil) . ' dni temu';
                 ?>
                 <div class="db-task-item">
                     <div class="db-task-left">
@@ -63,7 +63,7 @@ include __DIR__ . '/partials/navbar.php';
                             <div class="db-task-meta">
                                 <?= htmlspecialchars($ev['course_name']) ?> &bull;
                                 <?= $startTime ?> &bull;
-                                <?= $ev['planned_done'] ?>/<?= $ev['planned_total'] ?> tasks done
+                                <?= $ev['planned_done'] ?>/<?= $ev['planned_total'] ?> zadań ukończonych
                                 (<?= $dueLabel ?>)
                             </div>
                         </div>
@@ -81,16 +81,16 @@ include __DIR__ . '/partials/navbar.php';
 
             <div class="db-timeline">
                 <?php if (empty($upcomingEvents)): ?>
-                <p style="font-size:14px;color:var(--db-text-muted);">No upcoming events.</p>
+                <p style="font-size:14px;color:var(--db-text-muted);">Brak nadchodzących wydarzeń.</p>
                 <?php else: ?>
                 <?php foreach ($upcomingEvents as $ev):
                     $d     = new DateTime(substr($ev['start_at'], 0, 10));
                     $today = new DateTime('today');
                     $diff  = (int) $today->diff($d)->days;
-                    if ($diff === 0)     $when = 'Today';
-                    elseif ($diff === 1) $when = 'Tomorrow';
-                    elseif ($diff <= 7)  $when = "In $diff days";
-                    else                 $when = $d->format('M d');
+                    if ($diff === 0)     $when = 'Dziś';
+                    elseif ($diff === 1) $when = 'Jutro';
+                    elseif ($diff <= 7)  $when = "Za $diff dni";
+                    else                 $when = $d->format('d.m');
 
                     $dot = $ev['type'] === 'exam'       ? '#a83836' :
                           ($ev['type'] === 'colloquium' ? '#1b6871' : '#a9b4b5');
@@ -106,7 +106,7 @@ include __DIR__ . '/partials/navbar.php';
             </div>
 
             <a href="/calendar" class="db-btn-teal">
-                VIEW FULL CALENDAR
+                PEŁNY KALENDARZ
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                     <path d="M2.5 6H9.5M6.5 2.5L10 6L6.5 9.5"
                           stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

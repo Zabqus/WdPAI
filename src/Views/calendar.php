@@ -32,8 +32,8 @@
     $nextYear  = ($month === 12) ? $year + 1 : $year;
     $nextMonth = ($month === 12) ? 1  : $month + 1;
 
-    $monthNames = ['January','February','March','April','May','June',
-                   'July','August','September','October','November','December'];
+    $monthNames = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
+                   'Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
     $monthLabel = $monthNames[$month - 1] . ' ' . $year;
     ?>
 </head>
@@ -74,12 +74,12 @@ include __DIR__ . '/partials/navbar.php';
                             </svg>
                         </a>
                     </div>
-                    <p class="cal-subtitle" id="cal-nav-subtitle">Academic Schedule &bull; Fall Semester</p>
+                    <p class="cal-subtitle" id="cal-nav-subtitle">Harmonogram</p>
                 </div>
                 <div class="cal-view-toggle">
-                    <button class="cal-toggle-btn active" id="cal-toggle-month">Month</button>
-                    <button class="cal-toggle-btn" id="cal-toggle-week">Week</button>
-                    <button class="cal-toggle-btn" id="cal-toggle-day">Day</button>
+                    <button class="cal-toggle-btn active" id="cal-toggle-month">Miesiąc</button>
+                    <button class="cal-toggle-btn" id="cal-toggle-week">Tydzień</button>
+                    <button class="cal-toggle-btn" id="cal-toggle-day">Dzień</button>
                 </div>
             </div>
 
@@ -89,7 +89,7 @@ include __DIR__ . '/partials/navbar.php';
 
                 <!-- Weekday headers -->
                 <div class="cal-weekdays">
-                    <?php foreach (['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] as $wd): ?>
+                    <?php foreach (['Pon','Wt','Śr','Czw','Pt','Sob','Nd'] as $wd): ?>
                         <div class="cal-weekday"><?= $wd ?></div>
                     <?php endforeach; ?>
                 </div>

@@ -57,7 +57,7 @@ include __DIR__ . '/partials/navbar.php';
     </div>
 
     <!-- Add task panel -->
-    <div class="sp-add-panel" id="sp-add-panel" hidden>
+    <div class="sp-add-panel" id="sp-add-panel">
         <h4 class="sp-add-panel-title">
             <i class="fa-solid fa-plus" aria-hidden="true"></i>
             Dodaj zadanie do planu
@@ -76,14 +76,6 @@ include __DIR__ . '/partials/navbar.php';
             <button class="sp-btn-save"   id="sp-add-save">Dodaj do planu</button>
         </div>
     </div>
-
-    <!-- Open add panel button -->
-    <button class="sp-btn-new" id="sp-add-btn">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Dodaj zadanie
-    </button>
 
     <!-- Upcoming 3-day preview -->
     <section class="sp-upcoming" aria-label="Najbliższe 3 dni">
